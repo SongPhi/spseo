@@ -18,8 +18,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Description here
+ * 
+ * @author Thao Le <thaolt@songphi.com>
+ * @package spseo.controllers
+ * @since 1.0
+ */
+
+
 class SPSEO_CTRL_Admin extends ADMIN_CTRL_Abstract 
 {
+    public function index() {
 
+    }
 }
 

@@ -18,3 +18,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+
+@OW::getPluginManager()->addPluginSettingsRouteName('spseo', 'spseo.admin');
+
