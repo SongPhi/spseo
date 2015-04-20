@@ -18,3 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+// Routes declaration
+SPSEO_BOL_Service::declareRoutes();
+
+// Events handling
+SPSEO_CLASS_EventHandler::initialization();
