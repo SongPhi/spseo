@@ -77,4 +77,5 @@ class SPSEO_BOL_Service
         OW::getRouter()->addRoute(new OW_Route('spseo.admin', 'admin/plugins/spseo', 'SPSEO_CTRL_Admin', 'index'));
     }
 
+    
 }
