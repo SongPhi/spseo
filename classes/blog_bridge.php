@@ -29,7 +29,7 @@
 /**
 * 
 */
-class SPSEO_CLASS_VideoBridge implements SPSEO_CLASS_BridgeInterface
+class SPSEO_CLASS_BlogBridge implements SPSEO_CLASS_BridgeInterface
 {
 	protected static $classInstance = null;
 
@@ -46,8 +46,8 @@ class SPSEO_CLASS_VideoBridge implements SPSEO_CLASS_BridgeInterface
 
 	public function handleRoutes() {
 		$matches = array();
-        if (preg_match('#^video/view/.*?\-(\d+)$#i', OW::getRouter()->getUri(), $matches)) {
-            OW::getRouter()->setUri('video/view/'.$matches[1]);
+        if (preg_match('#^blogs/.*?\-(\d+)$#i', OW::getRouter()->getUri(), $matches)) {
+            OW::getRouter()->setUri('blogs/'.$matches[1]);
             return true;
         }
         return false;
@@ -55,14 +55,14 @@ class SPSEO_CLASS_VideoBridge implements SPSEO_CLASS_BridgeInterface
 
 	public function modifyLinks($body) {
 		$baseurl = preg_quote(OW::getRouter()->getBaseUrl(),'#');
-        $pattern = '#'.$baseurl.'video\/view\/(\d+)#i';
-        $body = preg_replace_callback($pattern, array($this,'videoViewRule'), $body);
+        $pattern = '#'.$baseurl.'blogs\/(\d+)#i';
+        $body = preg_replace_callback($pattern, array($this,'blogsRule'), $body);
         return $body;
 	}
 
-	public function videoViewRule( array $matches ) {
-        $clip = VIDEO_BOL_ClipService::getInstance()->findClipById($matches[1]);
-        $slug = SPSEO_BOL_Service::getInstance()->slugify($clip->title).'-'.$clip->id;
-        return OW::getRouter()->getBaseUrl().'video/view/'.$slug;
+	public function blogsRule( array $matches ) {
+        $post = PostService::getInstance()->findById($matches[1]);
+        $slug = SPSEO_BOL_Service::getInstance()->slugify($post->title).'-'.$post->id;
+        return OW::getRouter()->getBaseUrl().'blogs/'.$slug;
     }
 }

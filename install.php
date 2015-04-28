@@ -21,3 +21,6 @@
 
 @OW::getPluginManager()->addPluginSettingsRouteName('spseo', 'spseo.admin');
 
+try {
+	BOL_LanguageService::getInstance()->addPrefix('spseo','SimpleSEO');
+} catch (Exception $e) { }

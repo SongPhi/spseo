@@ -119,67 +119,35 @@ class SPSEO_CLASS_EventHandler
         $em = OW::getEventManager();
         $em->bind(OW_EventManager::ON_PLUGINS_INIT, array($instance, 'onBeforeRouting'));
         $em->bind(OW_EventManager::ON_BEFORE_DOCUMENT_RENDER, array($instance, 'onDocumentRender'));
-        
+        $em->bind(BASE_CMP_Console::EVENT_NAME, array($instance, 'addConsoleItem'));
+    }
+
+    public function addConsoleItem( BASE_CLASS_EventCollector $event ) {
+        $language = OW::getLanguage();
+        $router = OW::getRouter();
+        if ( OW::getUser()->isAdmin() ) {
+            $item = new BASE_CMP_ConsoleDropdownMenu($language->text('spseo', 'console_menu_text'));
+            $item->setUrl('javascript://');
+            $item->addItem('main', array('label' => $language->text('spseo', 'console_item_manage_pages'), 'url' => $router->urlForRoute('admin_pages_main')));
+            $item->addItem('main', array('label' => $language->text('spseo', 'console_item_manage_plugins'), 'url' => $router->urlForRoute('admin_plugins_installed')));
+
+            $event->addItem($item, 999);
+        }
+    }
+
+    public function onDocumentRender() {
+        SPSEO_BOL_Service::getInstance()->applyPageModifications();
     }
 
     public function onBeforeRouting() {
-        // var_dump(OW::getRouter()->getRoutes()); 
-        // $_SERVER['REQUEST_URI'] = '/video';
-        
-        $matches = array();
-        if (preg_match('#^video/view/.*?\-(\d+)$#i', OW::getRouter()->getUri(), $matches))
-            OW::getRouter()->setUri('video/view/'.$matches[1]);
-    }
+        // init bridges
+        SPSEO_CLASS_ForumBridge::getInstance();
+        SPSEO_CLASS_VideoBridge::getInstance();
+        SPSEO_CLASS_BlogBridge::getInstance();
+        SPSEO_CLASS_GroupsBridge::getInstance();
+        SPSEO_CLASS_EventsBridge::getInstance();
 
-    public function testRule( array $matches ) {
-        // var_dump($matches); 
-        $clip = VIDEO_BOL_ClipService::getInstance()->findClipById($matches[1]);
-        $slug = $this->slugify($clip->title).'-'.$clip->id;
-        return OW::getRouter()->getBaseUrl().'video/view/'.$slug;
-    }
-
-    public function applyPageModifications() {
-        $doc = OW::getDocument();
-
-        $baseurl = preg_quote(OW::getRouter()->getBaseUrl(),'#');
-        $pattern = '#'.$baseurl.'video\/view\/(\d+)#i';
-        $newbody = $doc->getBody();
-        $newbody = preg_replace_callback($pattern, array($this,'testRule'), $newbody);
-        $doc->setBody($newbody);
-    }
-
-
-    public function onDocumentRender() {
-        
-        $this->applyPageModifications();
-    }
-
-    public function slugify($text) {
-        $text = str_replace(array_keys($this->char_map), $this->char_map, $text);
-        // replace non letter or digits by -
-        $text = preg_replace('~[^\\pL\d]+~u', '-', $text);
-     
-        // trim
-        $text = trim($text, '-');
-     
-        // transliterate
-        if (function_exists('iconv'))
-        {
-            $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
-        }
-     
-        // lowercase
-        $text = strtolower($text);
-     
-        // remove unwanted characters
-        $text = preg_replace('~[^-\w]+~', '', $text);
-     
-        if (empty($text))
-        {
-            return 'n-a';
-        }
-     
-        return $text;
+        SPSEO_BOL_Service::getInstance()->handleRoutes();
     }
 
 }

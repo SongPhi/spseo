@@ -1,6 +1,4 @@
-<?php
-
-/**
+{**
  * SPSEO - Simple Search Engine Optimization toolkit for Oxwall platform
  * Copyright (C) 2015 SONGPHI LLC.
  *
@@ -16,12 +14,21 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+ *}
 
-// Routes declaration
-SPSEO_BOL_Service::declareRoutes();
+{$menu}
 
-// Events handling
-SPSEO_CLASS_EventHandler::initialization();
-
-
+{form name='robotstxtForm'}
+<div class="ow_box" style="border-radius:0;">
+	{if $isFtpRequired}
+	<div class="ow_left">
+		FTP Login: 
+		{input name='username' style='width:160px' placeholder='username'} {error name='username'} 
+        {input name='password' style='width:160px' placeholder='password'} {error name='password'}
+	</div>
+	{/if}
+	<div class="ow_right">{submit name='save' class='ow_ic_save ow_positive'}</div>
+	<div class="clearfix"></div>
+</div>
+{input name='content' style='height:500px'}
+{/form}

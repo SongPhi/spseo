@@ -18,10 +18,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// Routes declaration
-SPSEO_BOL_Service::declareRoutes();
+/**
+ * Description here
+ * 
+ * @author Thao Le <thaolt@songphi.com>
+ * @package spseo.classes
+ * @since 1.0
+ */
 
-// Events handling
-SPSEO_CLASS_EventHandler::initialization();
-
-
+/**
+* 
+*/
+interface SPSEO_CLASS_BridgeInterface
+{
+	
+	
+}
