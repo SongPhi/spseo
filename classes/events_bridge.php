@@ -41,7 +41,7 @@ class SPSEO_CLASS_EventsBridge implements SPSEO_CLASS_BridgeInterface
 	}
 
 	protected function __construct() {
-		SPSEO_BOL_Service::getInstance()->registerBridge($this);
+		SPSEO_BOL_Service::getInstance()->registerBridge($this,array('event/'=>'eventRule'));
 	}
 
 	public function handleRoutes() {
@@ -53,15 +53,8 @@ class SPSEO_CLASS_EventsBridge implements SPSEO_CLASS_BridgeInterface
         return false;
 	}
 
-	public function modifyLinks($body) {
-		$baseurl = preg_quote(OW::getRouter()->getBaseUrl(),'#');
-        $pattern = '#'.$baseurl.'event\/(\d+)#i';
-        $body = preg_replace_callback($pattern, array($this,'eventRule'), $body);
-        return $body;
-	}
-
-	public function eventRule( array $matches ) {
-        $event = EVENT_BOL_EventService::getInstance()->findEvent($matches[1]);
+	public function eventRule( $id ) {
+        $event = EVENT_BOL_EventService::getInstance()->findEvent($id);
         $slug = SPSEO_BOL_Service::getInstance()->slugify($event->title).'-'.$event->id;
         return OW::getRouter()->getBaseUrl().'event/'.$slug;
     }

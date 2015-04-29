@@ -23,27 +23,16 @@
  * @package spseo.components
  * @since 1.0
  */
-class SPSEO_CMP_ConsoleComponent extends BASE_CMP_ConsoleDropdownMenu
+class SPSEO_CMP_PageMeta extends OW_Renderable
 {
 	public function __construct()
     {
         $language = OW::getLanguage();
-        parent::__construct($language->text('spseo', 'console_menu_text'));
-
-
-        $this->setUrl('javascript://');
-        $this->addItem('main', array('label' => $language->text('spseo', 'console_edit_page_meta'), 'url' => 'javascript://'));
+       
     }
 
     protected function initJs()
     {
-        // $js = UTIL_JsGenerator::newInstance();
-        // $js->addScript('OW.Console.addItem(new OW_ConsoleDropdownHover({$uniqId}, {$contentIniqId}), {$key});', array(
-        //     'key' => $this->getKey(),
-        //     'uniqId' => $this->consoleItem->getUniqId(),
-        //     'contentIniqId' => $this->consoleItem->getContentUniqId()
-        // ));
 
-        // OW::getDocument()->addOnloadScript($js);
     }
 }

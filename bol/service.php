@@ -32,10 +32,12 @@ class SPSEO_BOL_Service
     protected static $classInstance = null;
 
     private $bridges;
+    private $patterns;
     public $char_map;
 
     protected function __construct() {
         $this->bridges = array();
+        $this->patterns = array();
         $this->char_map = array(
             // Latin
             'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A', 'Å' => 'A', 'Æ' => 'AE', 'Ç' => 'C', 
@@ -103,14 +105,28 @@ class SPSEO_BOL_Service
             'š' => 's', 'ū' => 'u', 'ž' => 'z',
 
             // Vietnamese
-            'á' => 'a', 'à' => 'a', 'ả' => 'a', 'ã' => 'a', 'ạ' => 'a', 'â' => 'a', 'ă' => 'a', 'é' => 'e',
-            'è' => 'e', 'ẻ' => 'e', 'ẽ' => 'e', 'ẹ' => 'e', 'ê' => 'e', 'ế' => 'e', 'ề' => 'e'
-
+            'á' => 'a', 'à' => 'a', 'ả' => 'a', 'ã' => 'a', 'ạ' => 'a', 'â' => 'a', 
+            'ấ' => 'a', 'ầ' => 'a', 'ẩ' => 'a', 'ẫ' => 'a', 'ậ' => 'a', 'ă' => 'a', 
+            'ắ' => 'a', 'ằ' => 'a', 'ẳ' => 'a', 'ẵ' => 'a', 'ặ' => 'a', 'é' => 'e', 
+            'è' => 'e', 'ẻ' => 'e', 'ẽ' => 'e', 'ẹ' => 'e', 'ê' => 'e', 'ế' => 'e', 
+            'ề' => 'e', 'ể' => 'e', 'ễ' => 'e', 'ệ' => 'e', 'í' => 'i', 'ì' => 'i', 
+            'ỉ' => 'i', 'ĩ' => 'i', 'ị' => 'i', 'ó' => 'o', 'ò' => 'o', 'ỏ' => 'o', 
+            'õ' => 'o', 'ọ' => 'o', 'ô' => 'o', 'ố' => 'o', 'ồ' => 'o', 'ổ' => 'o', 
+            'ỗ' => 'o', 'ộ' => 'o', 'ơ' => 'o', 'ớ' => 'o', 'ờ' => 'o', 'ở' => 'o', 
+            'ỡ' => 'o', 'ợ' => 'o', 'ú' => 'u', 'ù' => 'u', 'ủ' => 'u', 'ũ' => 'u', 
+            'ụ' => 'u', 'ư' => 'u', 'ứ' => 'u', 'ừ' => 'u', 'ử' => 'u', 'ữ' => 'u', 
+            'ự' => 'u', 'đ' => 'd'
         );
     }
 
-    public function registerBridge($instance) {
-        $this->bridges[get_class($instance)] = $instance;
+    public function registerBridge($instance, $patterns) {
+        $className = get_class($instance);
+        $this->bridges[$className] = $instance;
+        foreach ($patterns as $key => $value) {
+            $patterns[$key] = array('class'=>$className,'callback'=>$value);
+        }
+
+        $this->patterns = array_merge($this->patterns, $patterns);
     }
 
     public static function getInstance() {
@@ -173,35 +189,59 @@ class SPSEO_BOL_Service
         }
     }
 
+    private function modifyLink( $matches ) {
+        // var_dump( str_replace(OW::getRouter()->getBaseUrl(), '', $matches[0]) );
+        // var_dump($matches[1]);
+        $uri = $matches[1];
+        $id = $matches[3];
+
+        $cacheService = SPSEO_BOL_CacheService::getInstance();
+        $friendlyUrl = $cacheService->findFriendlyUrl($uri);
+
+        if ($friendlyUrl !== false) 
+            return $friendlyUrl;
+
+        $prefix = substr($uri, 0, 0-strlen($id) );
+
+        $class = isset( $this->patterns[ $prefix ] ) ? $this->patterns[ $prefix ]['class'] : false;
+        $callback = isset( $this->patterns[ $prefix ] ) ? $this->patterns[ $prefix ]['callback'] : false;
+
+        $bridge = $class ? $this->bridges[ $class ] : false;
+
+        if ($bridge !== false) {
+
+            $friendlyUrl = call_user_func_array(array($bridge, $callback), array( $id )) ;
+            $cacheService->updateFriendlyUrl( $uri, $friendlyUrl );
+        }
+
+        return $friendlyUrl;
+    }
+
     public function applyPageModifications() {
         $doc = OW::getDocument();
         $newbody = $doc->getBody();
+        // $time = microtime();
+        $baseurl = preg_quote(OW::getRouter()->getBaseUrl(),'#');
+        $pattern = '#'.$baseurl.'(([a-z0-9\-\_]+\/)+(\d+))#i';
+        $newbody = preg_replace_callback($pattern, array($this,'modifyLink'), $newbody);
+        // die(microtime()-$time);
         
-        foreach ($this->bridges as $bridge) {
-            $newbody = $bridge->modifyLinks($newbody);
-        }
-
         $doc->setBody($newbody);
     }
 
     public function slugify($text) {
+        $text = strtolower($text);
         $text = str_replace(array_keys($this->char_map), $this->char_map, $text);
-        // replace non letter or digits by -
+        
         $text = preg_replace('~[^\\pL\d]+~u', '-', $text);
      
-        // trim
         $text = trim($text, '-');
      
-        // transliterate
         if (function_exists('iconv'))
         {
             $text = iconv('utf-8', 'us-ascii//TRANSLIT', $text);
         }
      
-        // lowercase
-        $text = strtolower($text);
-     
-        // remove unwanted characters
         $text = preg_replace('~[^-\w]+~', '', $text);
      
         if (empty($text))

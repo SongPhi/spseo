@@ -41,7 +41,10 @@ class SPSEO_CLASS_BlogBridge implements SPSEO_CLASS_BridgeInterface
 	}
 
 	protected function __construct() {
-		SPSEO_BOL_Service::getInstance()->registerBridge($this);
+		SPSEO_BOL_Service::getInstance()->registerBridge(
+			$this,
+			array('blogs/'=>'blogsRule')
+		);
 	}
 
 	public function handleRoutes() {
@@ -53,15 +56,8 @@ class SPSEO_CLASS_BlogBridge implements SPSEO_CLASS_BridgeInterface
         return false;
 	}
 
-	public function modifyLinks($body) {
-		$baseurl = preg_quote(OW::getRouter()->getBaseUrl(),'#');
-        $pattern = '#'.$baseurl.'blogs\/(\d+)#i';
-        $body = preg_replace_callback($pattern, array($this,'blogsRule'), $body);
-        return $body;
-	}
-
-	public function blogsRule( array $matches ) {
-        $post = PostService::getInstance()->findById($matches[1]);
+	public function blogsRule( $id ) {
+        $post = PostService::getInstance()->findById($id);
         $slug = SPSEO_BOL_Service::getInstance()->slugify($post->title).'-'.$post->id;
         return OW::getRouter()->getBaseUrl().'blogs/'.$slug;
     }

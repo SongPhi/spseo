@@ -41,7 +41,14 @@ class SPSEO_CLASS_ForumBridge implements SPSEO_CLASS_BridgeInterface
 	}
 
 	protected function __construct() {
-		SPSEO_BOL_Service::getInstance()->registerBridge($this);
+		SPSEO_BOL_Service::getInstance()->registerBridge(
+			$this,
+			array(
+				'forum/' => 'forumGroupRule',
+				'forum/section/' => 'forumSectionRule',
+				'forum/topic/' => 'forumTopicRule'
+			)
+		);
 	}
 
 	public function handleRoutes() {
@@ -50,19 +57,41 @@ class SPSEO_CLASS_ForumBridge implements SPSEO_CLASS_BridgeInterface
             OW::getRouter()->setUri('forum/topic/'.$matches[1]);
             return true;
         }
+        if (preg_match('#^forum/section/.*?\-(\d+)$#i', OW::getRouter()->getUri(), $matches)) {
+            OW::getRouter()->setUri('forum/section/'.$matches[1]);
+            return true;
+        }
+        if (preg_match('#^forum/.*?\-(\d+)$#i', OW::getRouter()->getUri(), $matches)) {
+            OW::getRouter()->setUri('forum/'.$matches[1]);
+            return true;
+        }
         return false;
 	}
 
-	public function modifyLinks($body) {
-		$baseurl = preg_quote(OW::getRouter()->getBaseUrl(),'#');
-        $pattern = '#'.$baseurl.'forum\/topic\/(\d+)#i';
-        $body = preg_replace_callback($pattern, array($this,'forumTopicRule'), $body);
-        return $body;
-	}
-
-	public function forumTopicRule( array $matches ) {
-        $topic = FORUM_BOL_ForumService::getInstance()->findTopicById($matches[1]);
+	public function forumTopicRule( $id ) {
+        $topic = FORUM_BOL_ForumService::getInstance()->findTopicById($id);
         $slug = SPSEO_BOL_Service::getInstance()->slugify($topic->title).'-'.$topic->id;
-        return OW::getRouter()->getBaseUrl().'forum/topic/'.$slug;
+
+        $friendlyUrl = OW::getRouter()->getBaseUrl().'forum/topic/'.$slug;
+
+        return $friendlyUrl;
+    }
+
+    public function forumGroupRule( $id ) {
+        $group = FORUM_BOL_ForumService::getInstance()->findGroupById($id);
+        $slug = SPSEO_BOL_Service::getInstance()->slugify($group->name).'-'.$group->id;
+
+        $friendlyUrl = OW::getRouter()->getBaseUrl().'forum/'.$slug;
+
+        return $friendlyUrl;
+    }
+
+    public function forumSectionRule( $id ) {
+        $section = FORUM_BOL_ForumService::getInstance()->findSectionById($id);
+        $slug = SPSEO_BOL_Service::getInstance()->slugify($section->name).'-'.$section->id;
+
+        $friendlyUrl = OW::getRouter()->getBaseUrl().'forum/section/'.$slug;
+
+        return $friendlyUrl;
     }
 }

@@ -41,7 +41,7 @@ class SPSEO_CLASS_VideoBridge implements SPSEO_CLASS_BridgeInterface
 	}
 
 	protected function __construct() {
-		SPSEO_BOL_Service::getInstance()->registerBridge($this);
+		SPSEO_BOL_Service::getInstance()->registerBridge($this,array('video/view/'=>'videoViewRule'));
 	}
 
 	public function handleRoutes() {
@@ -53,15 +53,8 @@ class SPSEO_CLASS_VideoBridge implements SPSEO_CLASS_BridgeInterface
         return false;
 	}
 
-	public function modifyLinks($body) {
-		$baseurl = preg_quote(OW::getRouter()->getBaseUrl(),'#');
-        $pattern = '#'.$baseurl.'video\/view\/(\d+)#i';
-        $body = preg_replace_callback($pattern, array($this,'videoViewRule'), $body);
-        return $body;
-	}
-
-	public function videoViewRule( array $matches ) {
-        $clip = VIDEO_BOL_ClipService::getInstance()->findClipById($matches[1]);
+	public function videoViewRule( $id ) {
+        $clip = VIDEO_BOL_ClipService::getInstance()->findClipById($id);
         $slug = SPSEO_BOL_Service::getInstance()->slugify($clip->title).'-'.$clip->id;
         return OW::getRouter()->getBaseUrl().'video/view/'.$slug;
     }
