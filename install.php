@@ -24,3 +24,27 @@
 try {
 	BOL_LanguageService::getInstance()->addPrefix('spseo','SimpleSEO');
 } catch (Exception $e) { }
+
+// -- CREATE TABLE "ow_spseo_url" ---------------------------------
+// CREATE TABLE `ow_spseo_url` ( 
+// 	`id` Int( 255 ) UNSIGNED AUTO_INCREMENT NOT NULL, 
+// 	`uri` VarChar( 255 ) NOT NULL, 
+// 	`prefix` VarChar( 255 ) NULL, 
+// 	`slug` VarChar( 255 ) NULL, 
+// 	`friendly_uri` Text NULL, 
+// 	`cache_pages` VarChar( 255 ) NULL, 
+// 	`updated` Int( 255 ) UNSIGNED NULL, 
+// 	`target_id` Int( 255 ) UNSIGNED NULL, 
+// 	`hash` VarChar( 32 ) NOT NULL,
+// 	 PRIMARY KEY ( `id` )
+// , 
+// 	CONSTRAINT `unique_id` UNIQUE( `id` ), 
+// 	CONSTRAINT `unique_uri` UNIQUE( `uri` ) );
+// CREATE INDEX `index_hash` ON `ow_spseo_url`( `hash` )
+
+// CREATE INDEX `index_id` ON `ow_spseo_url`( `id` )
+
+// CREATE INDEX `index_slug` ON `ow_spseo_url`( `slug` )
+
+// CREATE INDEX `index_uri` ON `ow_spseo_url`( `uri` );
+// -- -------------------------------------------------------------

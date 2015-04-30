@@ -19,50 +19,40 @@
  */
 
 /**
- * Description here
- * 
  * @author Thao Le <thaolt@songphi.com>
- * @package spseo.classes
+ * @package spseo.bol
  * @since 1.0
  */
 
-/**
-* 
-*/
-class SPSEO_CLASS_BlogBridge implements SPSEO_CLASS_BridgeInterface
+class SPSEO_BOL_PageUrlsDao extends OW_BaseDao
 {
 	protected static $classInstance = null;
 
 	public static function getInstance() {
-		if (self::$classInstance === null)  {
+		if (self::$classInstance === null) {
 			self::$classInstance = new self();
 		}
+
 		return self::$classInstance;
 	}
 
-	protected function __construct() {
-		SPSEO_BOL_Service::getInstance()->registerBridge(
-			$this,
-			array('blogs/'=>'blogsRule','blogs/post/'=>'blogsRule')
-		);
-	}
-
-	public function handleRoutes() {
-		$matches = array();
-        if (preg_match('#^blogs/.*?\-(\d+)$#i', OW::getRouter()->getUri(), $matches)) {
-            OW::getRouter()->setUri('blogs/'.$matches[1]);
-            return true;
-        }
-        if (preg_match('#^blogs/post/.*?\-(\d+)$#i', OW::getRouter()->getUri(), $matches)) {
-            OW::getRouter()->setUri('blogs/'.$matches[1]);
-            return true;
-        }
-        return false;
-	}
-
-	public function blogsRule( $id ) {
-        $post = PostService::getInstance()->findById($id);
-        $slug = SPSEO_BOL_Service::getInstance()->slugify($post->title).'-'.$post->id;
-        return 'blogs/'.$slug;
+    public function getDtoClassName() {
+        return 'SPSEO_BOL_PageUrls';
     }
+
+    public function getTableName() {
+        return OW_DB_PREFIX . 'spseo_page_urls';
+    }
+
+    public function updatePageUrls($pageHash, array $urlHashes) {
+    	$sql = "";
+    	$updated = time();
+    	foreach ($urlHashes as $urlHash) {
+    		$sql .= "INSERT INTO `".$this->getTableName()."`"
+    			 ." (`page_hash`,`url_hash`,`updated`) VALUES (\"$pageHash\",\"$urlHash\",\"$updated\")"
+    			 ." ON DUPLICATE KEY UPDATE `updated`=\"$updated\";\n";
+    	}
+		$this->dbo->update($sql);
+    }
+
 }

@@ -72,7 +72,7 @@ class SPSEO_CLASS_ForumBridge implements SPSEO_CLASS_BridgeInterface
         $topic = FORUM_BOL_ForumService::getInstance()->findTopicById($id);
         $slug = SPSEO_BOL_Service::getInstance()->slugify($topic->title).'-'.$topic->id;
 
-        $friendlyUrl = OW::getRouter()->getBaseUrl().'forum/topic/'.$slug;
+        $friendlyUrl = 'forum/topic/'.$slug;
 
         return $friendlyUrl;
     }
@@ -81,7 +81,7 @@ class SPSEO_CLASS_ForumBridge implements SPSEO_CLASS_BridgeInterface
         $group = FORUM_BOL_ForumService::getInstance()->findGroupById($id);
         $slug = SPSEO_BOL_Service::getInstance()->slugify($group->name).'-'.$group->id;
 
-        $friendlyUrl = OW::getRouter()->getBaseUrl().'forum/'.$slug;
+        $friendlyUrl = 'forum/'.$slug;
 
         return $friendlyUrl;
     }
@@ -90,7 +90,7 @@ class SPSEO_CLASS_ForumBridge implements SPSEO_CLASS_BridgeInterface
         $section = FORUM_BOL_ForumService::getInstance()->findSectionById($id);
         $slug = SPSEO_BOL_Service::getInstance()->slugify($section->name).'-'.$section->id;
 
-        $friendlyUrl = OW::getRouter()->getBaseUrl().'forum/section/'.$slug;
+        $friendlyUrl = 'forum/section/'.$slug;
 
         return $friendlyUrl;
     }

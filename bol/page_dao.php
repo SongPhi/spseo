@@ -19,43 +19,29 @@
  */
 
 /**
- * Description here
- * 
  * @author Thao Le <thaolt@songphi.com>
- * @package spseo.classes
+ * @package spseo.bol
  * @since 1.0
  */
 
-/**
-* 
-*/
-class SPSEO_CLASS_EventsBridge implements SPSEO_CLASS_BridgeInterface
+class SPSEO_BOL_PageDao extends OW_BaseDao
 {
 	protected static $classInstance = null;
 
 	public static function getInstance() {
-		if (self::$classInstance === null)  {
+		if (self::$classInstance === null) {
 			self::$classInstance = new self();
 		}
+
 		return self::$classInstance;
 	}
 
-	protected function __construct() {
-		SPSEO_BOL_Service::getInstance()->registerBridge($this,array('event/'=>'eventRule'));
-	}
-
-	public function handleRoutes() {
-		$matches = array();
-        if (preg_match('#^event/.*?\-(\d+)$#i', OW::getRouter()->getUri(), $matches)) {
-            OW::getRouter()->setUri('event/'.$matches[1]);
-            return true;
-        }
-        return false;
-	}
-
-	public function eventRule( $id ) {
-        $event = EVENT_BOL_EventService::getInstance()->findEvent($id);
-        $slug = SPSEO_BOL_Service::getInstance()->slugify($event->title).'-'.$event->id;
-        return 'event/'.$slug;
+    public function getDtoClassName() {
+        return 'SPSEO_BOL_Page';
     }
+
+    public function getTableName() {
+        return OW_DB_PREFIX . 'spseo_page';
+    }
+
 }

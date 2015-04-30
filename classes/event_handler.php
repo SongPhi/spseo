@@ -61,6 +61,8 @@ class SPSEO_CLASS_EventHandler
     }
 
     public function onBeforeRouting() {
+        if (OW::getRequest()->isAjax() && OW::getRequest()->isPost()) return;
+
         // init bridges
         SPSEO_CLASS_ForumBridge::getInstance();
         SPSEO_CLASS_VideoBridge::getInstance();

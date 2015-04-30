@@ -56,6 +56,6 @@ class SPSEO_CLASS_VideoBridge implements SPSEO_CLASS_BridgeInterface
 	public function videoViewRule( $id ) {
         $clip = VIDEO_BOL_ClipService::getInstance()->findClipById($id);
         $slug = SPSEO_BOL_Service::getInstance()->slugify($clip->title).'-'.$clip->id;
-        return OW::getRouter()->getBaseUrl().'video/view/'.$slug;
+        return 'video/view/'.$slug;
     }
 }

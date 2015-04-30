@@ -31,6 +31,7 @@ class SPSEO_BOL_CacheService
 	private $changed = false;
 	private $cacheDir = null;
 	private $cacheFile = null;
+	private $hash = null;
 
 	public static function getInstance() {
 		if (self::$classInstance === null) {
@@ -43,9 +44,9 @@ class SPSEO_BOL_CacheService
 	protected function __construct() {
 		$this->changed = false;
 		$uri = OW::getRouter()->getUri();
-		$hash = crc32($uri);
+		$this->hash = crc32($uri);
 		$this->cacheDir = ( SPSEO_BOL_Service::getPlugin()->getPluginFilesDir() ) . 'cache';
-		$this->cacheFile = $this->cacheDir . DS . $hash;
+		$this->cacheFile = $this->cacheDir . DS . $this->hash;
 
 		if (!file_exists($this->cacheDir)) {
 			mkdir($this->cacheDir, 0777, true);
@@ -69,17 +70,43 @@ class SPSEO_BOL_CacheService
 		}
 	}
 
-	public function findFriendlyUrl( $url ) {
-		if (isset($this->data['urls']) && isset($this->data['urls'][$url]) && !empty($this->data['urls'][$url]))
-			return $this->data['urls'][$url];
+	public function findFriendlyUri( $uri ) {
+		if (isset($this->data['urls']) && isset($this->data['urls'][$uri]) && !empty($this->data['urls'][$uri]))
+			return $this->data['urls'][$uri];
 		return false;
 	}
 
-	public function updateFriendlyUrl( $url, $friendlyOne ) {
+	public function updateFriendlyUri( $uri, $friendlyOne ) {
 		if (!isset($this->data['urls']))
 			$this->data['urls'] = array();
 
-		$this->data['urls'][$url] = $friendlyOne;
+		$this->data['urls'][$uri] = $friendlyOne;
 		$this->changed = true;
+	}
+
+	public function getSlug() {
+		if (isset($this->data['slug']) && !empty($this->data['slug']))
+			return $this->data['slug'];
+		return false;
+	}
+
+	public function updateSlug( $slug ) {
+		$this->data['slug'] = $slug;
+		$this->changed = true;
+	}
+
+	public function getMetaData() {
+		if (isset($this->data['meta']) && is_array($this->data['meta']))
+			return $this->data['meta'];
+		return array();
+	}
+
+	public function updateMeta( array $meta ) {
+		$this->data['meta'] = $meta;
+		$this->changed = true;
+	}
+
+	public function pageHash() {
+		return $this->hash;
 	}
 }

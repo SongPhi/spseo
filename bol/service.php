@@ -33,11 +33,14 @@ class SPSEO_BOL_Service
 
     private $bridges;
     private $patterns;
+    private $collected;
+
     public $char_map;
 
     protected function __construct() {
         $this->bridges = array();
         $this->patterns = array();
+        $this->collected = array();
         $this->char_map = array(
             // Latin
             'À' => 'A', 'Á' => 'A', 'Â' => 'A', 'Ã' => 'A', 'Ä' => 'A', 'Å' => 'A', 'Æ' => 'AE', 'Ç' => 'C', 
@@ -196,10 +199,13 @@ class SPSEO_BOL_Service
         $id = $matches[3];
 
         $cacheService = SPSEO_BOL_CacheService::getInstance();
-        $friendlyUrl = $cacheService->findFriendlyUrl($uri);
-
-        if ($friendlyUrl !== false) 
-            return $friendlyUrl;
+        $friendlyUri = $cacheService->findFriendlyUri($uri);
+        
+        if ($friendlyUri !== false) 
+            return OW::getRouter()->getBaseUrl().$friendlyUri;
+        
+        $urlService = SPSEO_BOL_UrlService::getInstance();
+        $hash = crc32($uri);
 
         $prefix = substr($uri, 0, 0-strlen($id) );
 
@@ -210,11 +216,22 @@ class SPSEO_BOL_Service
 
         if ($bridge !== false) {
 
-            $friendlyUrl = call_user_func_array(array($bridge, $callback), array( $id )) ;
-            $cacheService->updateFriendlyUrl( $uri, $friendlyUrl );
+            $friendlyUri = $urlService->findByUri($uri);
+
+            if (is_object($friendlyUri)) {
+                $friendlyUri = $friendlyUri->friendly_uri;
+            } else {
+                $friendlyUri = call_user_func_array(array($bridge, $callback), array( $id )) ;
+                $urlService->insert($uri,$friendlyUri,$prefix,$id,$hash,$cacheService->pageHash());
+            }
+            $this->collected[] = $hash;
+
+            $cacheService->updateFriendlyUri( $uri, $friendlyUri );
+            return OW::getRouter()->getBaseUrl().$friendlyUri;
         }
 
-        return $friendlyUrl;
+        $cacheService->updateFriendlyUri( $uri, $uri );
+        return OW::getRouter()->getBaseUrl().$uri;
     }
 
     public function applyPageModifications() {
@@ -226,6 +243,9 @@ class SPSEO_BOL_Service
         $newbody = preg_replace_callback($pattern, array($this,'modifyLink'), $newbody);
         // die(microtime()-$time);
         
+        if (count($this->collected)>0)
+            SPSEO_BOL_PageUrlsDao::getInstance()->updatePageUrls(SPSEO_BOL_CacheService::getInstance()->pageHash(), $this->collected);
+
         $doc->setBody($newbody);
     }
 

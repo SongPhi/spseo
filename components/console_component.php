@@ -32,7 +32,8 @@ class SPSEO_CMP_ConsoleComponent extends BASE_CMP_ConsoleDropdownMenu
 
 
         $this->setUrl('javascript://');
-        $this->addItem('main', array('label' => $language->text('spseo', 'console_edit_page_meta'), 'url' => 'javascript://'));
+        $this->addItem('main', array('class' => 'spseo_edit_page_meta','label' => $language->text('spseo', 'console_edit_page_meta'), 'url' => 'javascript://'));
+        $this->addItem('main', array('class' => 'spseo_clear_urls_cache', 'label' => $language->text('spseo', 'console_clear_urls_cache'), 'url' => 'javascript://'));
     }
 
     protected function initJs()

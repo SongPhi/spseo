@@ -1,5 +1,4 @@
 <?php
-
 /**
  * SPSEO - Simple Search Engine Optimization toolkit for Oxwall platform
  * Copyright (C) 2015 SONGPHI LLC.
@@ -19,50 +18,46 @@
  */
 
 /**
- * Description here
- * 
  * @author Thao Le <thaolt@songphi.com>
- * @package spseo.classes
+ * @package spseo.bol
  * @since 1.0
  */
 
 /**
 * 
 */
-class SPSEO_CLASS_BlogBridge implements SPSEO_CLASS_BridgeInterface
+class SPSEO_BOL_UrlService
 {
 	protected static $classInstance = null;
 
+	private $urlDao = null;
+
 	public static function getInstance() {
-		if (self::$classInstance === null)  {
+		if (self::$classInstance === null) {
 			self::$classInstance = new self();
 		}
+
 		return self::$classInstance;
 	}
 
 	protected function __construct() {
-		SPSEO_BOL_Service::getInstance()->registerBridge(
-			$this,
-			array('blogs/'=>'blogsRule','blogs/post/'=>'blogsRule')
-		);
+		$this->urlDao = SPSEO_BOL_UrlDao::getInstance();
 	}
 
-	public function handleRoutes() {
-		$matches = array();
-        if (preg_match('#^blogs/.*?\-(\d+)$#i', OW::getRouter()->getUri(), $matches)) {
-            OW::getRouter()->setUri('blogs/'.$matches[1]);
-            return true;
-        }
-        if (preg_match('#^blogs/post/.*?\-(\d+)$#i', OW::getRouter()->getUri(), $matches)) {
-            OW::getRouter()->setUri('blogs/'.$matches[1]);
-            return true;
-        }
-        return false;
+	public function findByUri( $uri ) {
+		return $this->urlDao->findByUri( $uri );
 	}
 
-	public function blogsRule( $id ) {
-        $post = PostService::getInstance()->findById($id);
-        $slug = SPSEO_BOL_Service::getInstance()->slugify($post->title).'-'.$post->id;
-        return 'blogs/'.$slug;
-    }
+	public function insert($uri,$friendlyUri,$prefix,$id,$hash,$pagehash) {
+		$obj = new SPSEO_BOL_Url();
+		$obj->uri = $uri;
+		$obj->friendly_uri = $friendlyUri;
+		$obj->prefix = $prefix;
+		$obj->target_id = $id;
+		$obj->hash = $hash;
+		$obj->updated = time();
+		$obj->slug = substr($friendlyUri, strlen($prefix));
+		$obj->slug = substr($obj->slug, 0, 0-(strlen($id)+1));
+		$this->urlDao->save( $obj );
+	}
 }

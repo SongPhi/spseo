@@ -56,6 +56,6 @@ class SPSEO_CLASS_GroupsBridge implements SPSEO_CLASS_BridgeInterface
 	public function groupsRule( $id ) {
         $group = GROUPS_BOL_Service::getInstance()->findGroupById($id);
         $slug = SPSEO_BOL_Service::getInstance()->slugify($group->title).'-'.$group->id;
-        return OW::getRouter()->getBaseUrl().'groups/'.$slug;
+        return 'groups/'.$slug;
     }
 }
