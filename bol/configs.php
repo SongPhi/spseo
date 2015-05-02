@@ -34,7 +34,12 @@ class SPVIDEOLITE_BOL_Configs
      * Default configurations
      */
     public $defaults = array(
-       
+        'features.video' => true,
+        'features.blogs' => true,
+        'features.forum' => true,
+        'features.events' => true,
+        'features.groups' => true,
+        'options.redirect301' => true,
     );
     
     protected static $classInstance = null;

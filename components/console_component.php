@@ -34,17 +34,19 @@ class SPSEO_CMP_ConsoleComponent extends BASE_CMP_ConsoleDropdownMenu
         $this->setUrl('javascript://');
         $this->addItem('main', array('class' => 'spseo_edit_page_meta','label' => $language->text('spseo', 'console_edit_page_meta'), 'url' => 'javascript://'));
         $this->addItem('main', array('class' => 'spseo_clear_urls_cache', 'label' => $language->text('spseo', 'console_clear_urls_cache'), 'url' => 'javascript://'));
+
+        $this->initJs();
     }
 
     protected function initJs()
     {
-        // $js = UTIL_JsGenerator::newInstance();
-        // $js->addScript('OW.Console.addItem(new OW_ConsoleDropdownHover({$uniqId}, {$contentIniqId}), {$key});', array(
-        //     'key' => $this->getKey(),
-        //     'uniqId' => $this->consoleItem->getUniqId(),
-        //     'contentIniqId' => $this->consoleItem->getContentUniqId()
-        // ));
+        $language = OW::getLanguage();
+        $js = "
+            $('.spseo_edit_page_meta a').click(function() {
+                skeletonAjaxFloatBox = OW.ajaxFloatBox('SPSEO_CMP_PageMeta', {uri: '".OW::getRouter()->getUri()."'} , {width:'600px', iconClass: 'ow_ic_file', title: '".$language->text('spseo', 'floatbox_page_meta_title')."'});
+            });
+        ";
 
-        // OW::getDocument()->addOnloadScript($js);
+        OW::getDocument()->addOnloadScript($js);
     }
 }

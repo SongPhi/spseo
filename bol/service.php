@@ -177,9 +177,9 @@ class SPSEO_BOL_Service
     public static function declareRoutes() {
         // admin routes
         OW::getRouter()->addRoute(new OW_Route('spseo.admin', 'admin/plugins/spseo', 'SPSEO_CTRL_Admin', 'index'));
-        OW::getRouter()->addRoute(new OW_Route('spseo.admin_pages', 'admin/plugins/spseo/pages', 'SPSEO_CTRL_Admin', 'pages'));
-        OW::getRouter()->addRoute(new OW_Route('spseo.admin_urls', 'admin/plugins/spseo/urls', 'SPSEO_CTRL_Admin', 'index'));
-        OW::getRouter()->addRoute(new OW_Route('spseo.admin_sitemap', 'admin/plugins/spseo/sitemap', 'SPSEO_CTRL_Admin', 'index'));
+        // OW::getRouter()->addRoute(new OW_Route('spseo.admin_pages', 'admin/plugins/spseo/pages', 'SPSEO_CTRL_Admin', 'pages'));
+        // OW::getRouter()->addRoute(new OW_Route('spseo.admin_urls', 'admin/plugins/spseo/urls', 'SPSEO_CTRL_Admin', 'index'));
+        // OW::getRouter()->addRoute(new OW_Route('spseo.admin_sitemap', 'admin/plugins/spseo/sitemap', 'SPSEO_CTRL_Admin', 'index'));
         OW::getRouter()->addRoute(new OW_Route('spseo.admin_robotstxt', 'admin/plugins/spseo/robotstxt', 'SPSEO_CTRL_Admin', 'robotstxt'));
         OW::getRouter()->addRoute(new OW_Route('spseo.admin_help', 'admin/plugins/spseo/help', 'SPSEO_CTRL_Admin', 'index'));
 
@@ -187,6 +187,13 @@ class SPSEO_BOL_Service
     }
 
     public function handleRoutes() {
+        $seoUrl = SPSEO_BOL_UrlService::getInstance()->findByUri(OW::getRouter()->getUri());
+
+        if (is_object($seoUrl)) {
+            header("HTTP/1.1 301 Moved Permanently"); 
+            header("Location: ".OW::getRouter()->getBaseUrl().$seoUrl->friendly_uri); die();
+        }
+
         foreach ($this->bridges as $bridge) {
             if ($bridge->handleRoutes()) break;
         }

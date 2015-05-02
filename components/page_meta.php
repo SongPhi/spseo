@@ -23,16 +23,14 @@
  * @package spseo.components
  * @since 1.0
  */
-class SPSEO_CMP_PageMeta extends OW_Renderable
+class SPSEO_CMP_PageMeta extends OW_Component
 {
-	public function __construct()
-    {
+	public function __construct($uri) {
         $language = OW::getLanguage();
-       
+        $pageMetaForm = new SPSEO_CLASS_PageMetaForm( $uri );
+
+        $this->assign('isSlugAvailable', $pageMetaForm->isSlugAvailable());
+        $this->addForm($pageMetaForm);
     }
 
-    protected function initJs()
-    {
-
-    }
 }

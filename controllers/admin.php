@@ -40,7 +40,7 @@ class SPSEO_CTRL_Admin extends ADMIN_CTRL_Abstract
 	}
 
 	function setPageHeading( $heading ) {
-		$heading = 'SIMPLE SEO :: ' . $heading;
+		$heading = 'SIMPLESEO :: ' . $heading;
 		return parent::setPageHeading( $heading );
 	}
 
@@ -54,15 +54,16 @@ class SPSEO_CTRL_Admin extends ADMIN_CTRL_Abstract
 
 	function robotstxt() {
 	    $robotstxtForm = new SPSEO_CLASS_RobotstxtForm();
-        $this->addForm($robotstxtForm);
-
+        
         $this->assign('isFtpRequired', $robotstxtForm->isFtpRequired());
+
+        $this->addForm($robotstxtForm);
 
         if ( OW::getRequest()->isPost() && $robotstxtForm->isValid($_POST) )
         {
             $robotstxtForm->process();
             OW::getFeedback()->info($this->language->text('spseo', 'robotstxt_updated'));
-            $this->redirect(OW::getRouter()->urlForRoute('spseo.admin'));
+            $this->redirect(OW::getRouter()->urlForRoute('spseo.admin_robotstxt'));
         } else {
 	    	$this->setPageHeading( $this->language->text( 'spseo', 'adm_menu_robottxt' ) );
         }
@@ -80,29 +81,29 @@ class SPSEO_CTRL_Admin extends ADMIN_CTRL_Abstract
 		$item->setOrder( 0 );
 		$menuItems[] = $item;
 
-		$item = new BASE_MenuItem();
-		$item->setLabel( $this->language->text( 'spseo', 'adm_menu_pages' ) );
-		$item->setUrl( OW::getRouter()->urlForRoute( 'spseo.admin_pages' ) );
-		$item->setKey( 'pages' );
-		$item->setIconClass( 'ow_ic_files' );
-		$item->setOrder( 1 );
-		$menuItems[] = $item;
+		// $item = new BASE_MenuItem();
+		// $item->setLabel( $this->language->text( 'spseo', 'adm_menu_pages' ) );
+		// $item->setUrl( OW::getRouter()->urlForRoute( 'spseo.admin_pages' ) );
+		// $item->setKey( 'pages' );
+		// $item->setIconClass( 'ow_ic_files' );
+		// $item->setOrder( 1 );
+		// $menuItems[] = $item;
 
-		$item = new BASE_MenuItem();
-		$item->setLabel( $this->language->text( 'spseo', 'adm_menu_urls' ) );
-		$item->setUrl( OW::getRouter()->urlForRoute( 'spseo.admin_urls' ) );
-		$item->setKey( 'urls' );
-		$item->setIconClass( 'ow_ic_link' );
-		$item->setOrder( 2 );
-		$menuItems[] = $item;
+		// $item = new BASE_MenuItem();
+		// $item->setLabel( $this->language->text( 'spseo', 'adm_menu_urls' ) );
+		// $item->setUrl( OW::getRouter()->urlForRoute( 'spseo.admin_urls' ) );
+		// $item->setKey( 'urls' );
+		// $item->setIconClass( 'ow_ic_link' );
+		// $item->setOrder( 2 );
+		// $menuItems[] = $item;
 
-		$item = new BASE_MenuItem();
-		$item->setLabel( $this->language->text( 'spseo', 'adm_menu_sitemap' ) );
-		$item->setUrl( OW::getRouter()->urlForRoute( 'spseo.admin_sitemap' ) );
-		$item->setKey( 'sitemap' );
-		$item->setIconClass( 'ow_ic_push_pin' );
-		$item->setOrder( 3 );
-		$menuItems[] = $item;
+		// $item = new BASE_MenuItem();
+		// $item->setLabel( $this->language->text( 'spseo', 'adm_menu_sitemap' ) );
+		// $item->setUrl( OW::getRouter()->urlForRoute( 'spseo.admin_sitemap' ) );
+		// $item->setKey( 'sitemap' );
+		// $item->setIconClass( 'ow_ic_push_pin' );
+		// $item->setOrder( 3 );
+		// $menuItems[] = $item;
 
 		$item = new BASE_MenuItem();
 		$item->setLabel( $this->language->text( 'spseo', 'adm_menu_robottxt' ) );

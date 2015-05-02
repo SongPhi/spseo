@@ -25,10 +25,6 @@
 
 class SPSEO_CLASS_RobotstxtForm extends Form
 {
-	/**
-     * Class constructor
-     *
-     */
     public function __construct()
     {
         parent::__construct('robotstxtForm');
@@ -38,11 +34,23 @@ class SPSEO_CLASS_RobotstxtForm extends Form
         if (!is_writable(OW_DIR_ROOT.'robots.txt')) {
 	        $ftpUserField = new TextField('username');
 	        $ftpUserField->setRequired(true);
+            $ftpUserField->addAttribute('placeholder',$language->text('spseo', 'fphldr_username'));
 	        $this->addElement($ftpUserField);
 
 	        $ftpPasswordField = new TextField('password');
-	        $ftpPasswordField->setRequired(true);
+            $ftpPasswordField->setRequired(true);
+	        $ftpPasswordField->addAttribute('placeholder',$language->text('spseo', 'fphldr_password'));
 	        $this->addElement($ftpPasswordField);
+
+            $ftpHostField = new TextField('host');
+            $ftpHostField->setRequired(false);
+            $ftpHostField->addAttribute('placeholder',$language->text('spseo', 'fphldr_host'));
+            $this->addElement($ftpHostField);
+
+            $ftpPortField = new TextField('port');
+            $ftpPortField->setRequired(false);
+            $ftpPortField->addAttribute('placeholder',$language->text('spseo', 'fphldr_port'));
+            $this->addElement($ftpPortField);
         }
 
         $fileContentField = new TextArea('content');
@@ -60,21 +68,15 @@ class SPSEO_CLASS_RobotstxtForm extends Form
     	return !is_writable(OW_DIR_ROOT.'robots.txt');
     }
 
-    /**
-     * Updates video plugin configuration
-     *
-     * @return boolean
-     */
     public function process()
     {
         $values = $this->getValues();
 
-        $config = OW::getConfig();
-
-        // $config->saveConfig('video', 'player_width', $values['playerWidth']);
-        // $config->saveConfig('video', 'player_height', $values['playerHeight']);
-        // $config->saveConfig('video', 'videos_per_page', $values['perPage']);
-        // $config->saveConfig('video', 'user_quota', $values['quota']);
+        if (is_writable(OW_DIR_ROOT.'robots.txt')) {
+            file_put_contents(OW_DIR_ROOT.'robots.txt', $values['content']);
+        } else {
+            
+        }
 
         return array('result' => true);
     }

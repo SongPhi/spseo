@@ -1,1 +1,10 @@
-page_meta.html
+<div>
+	{form name='pageMetaForm'}
+		{if $isSlugAvailable}
+		{input name='slug'}
+		{/if}
+		{input name='description'}
+		{input name='keywords'}
+		<div style="text-align:center">{submit name='save' class='ow_ic_save ow_positive'}</div>
+	{/form}
+</div>

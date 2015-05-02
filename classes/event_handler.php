@@ -50,6 +50,9 @@ class SPSEO_CLASS_EventHandler
     public function addConsoleItem( BASE_CLASS_EventCollector $event ) {
         $language = OW::getLanguage();
         $router = OW::getRouter();
+
+        if (strpos($router->getUri(), 'admin/')===0) return;
+
         if ( OW::getUser()->isAdmin() ) {
             $item = new SPSEO_CMP_ConsoleComponent();
             $event->addItem($item, 999);
