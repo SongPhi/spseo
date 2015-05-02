@@ -1,5 +1,4 @@
 <?php
-
 /**
  * SPSEO - Simple Search Engine Optimization toolkit for Oxwall platform
  * Copyright (C) 2015 SONGPHI LLC.
