@@ -24,7 +24,7 @@ $tblPageUrls = $dbPref.'page_urls';
 $tblUrl = $dbPref.'url';
 
 $installSQL = "CREATE TABLE IF NOT EXISTS `$tblPage` ( 
-	`id` INT( 255 ) UNSIGNED AUTO_INCREMENT NOT NULL, 
+	`id` INT UNSIGNED AUTO_INCREMENT NOT NULL, 
 	`hash` VARCHAR( 32 ) NOT NULL, 
 	`uri` VARCHAR( 255 ) NOT NULL, 
 	`meta_description` TEXT NULL, 
@@ -37,23 +37,23 @@ $installSQL = "CREATE TABLE IF NOT EXISTS `$tblPage` (
 ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `$tblPageUrls` ( 
-	`id` INT( 255 ) UNSIGNED AUTO_INCREMENT NOT NULL, 
+	`id` INT UNSIGNED AUTO_INCREMENT NOT NULL, 
 	`page_hash` VARCHAR( 32 ) NOT NULL, 
 	`url_hash` VARCHAR( 32 ) NOT NULL, 
-	`updated` INT( 255 ) UNSIGNED NOT NULL,
+	`updated` INT UNSIGNED NOT NULL,
 	 PRIMARY KEY ( `page_hash`,`url_hash` )
 , 
 	CONSTRAINT `unique_id` UNIQUE( `id` ) )
 ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `$tblUrl` ( 
-	`id` INT( 255 ) UNSIGNED AUTO_INCREMENT NOT NULL, 
+	`id` INT UNSIGNED AUTO_INCREMENT NOT NULL, 
 	`uri` VARCHAR( 255 ) NOT NULL, 
 	`prefix` VARCHAR( 255 ) NULL, 
 	`slug` VARCHAR( 255 ) NULL, 
 	`friendly_uri` TEXT NULL, 
-	`updated` INT( 255 ) UNSIGNED NULL, 
-	`target_id` INT( 255 ) UNSIGNED NULL, 
+	`updated` INT UNSIGNED NULL, 
+	`target_id` INT UNSIGNED NULL, 
 	`hash` VARCHAR( 32 ) NOT NULL,
 	 PRIMARY KEY ( `id` )
 , 

@@ -20,6 +20,12 @@
 
 class SPSEO_CTRL_Spseo extends OW_ActionController
 {
+	public function savepage() {
 
+	}
+
+	public function cleancache() {
+		
+	}
 }
 
