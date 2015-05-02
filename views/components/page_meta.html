@@ -1,10 +1,20 @@
 <div>
 	{form name='pageMetaForm'}
 		{if $isSlugAvailable}
-		{input name='slug'}
+		<p>
+			{label name='slug'}
+			{input name='slug'}
+		</p>
 		{/if}
-		{input name='description'}
-		{input name='keywords'}
+		<p>
+			{label name='description'}
+			{input name='description' style='height:70px'}
+		</p>
+		<p>
+			{label name='keywords'}
+			{input name='keywords' style='height:70px'}
+		</p>
+		<p style="text-align:center; font-style: italic">{text key='spseo+pgmtf_explain'}</p>
 		<div style="text-align:center">{submit name='save' class='ow_ic_save ow_positive'}</div>
 	{/form}
 </div>

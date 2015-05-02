@@ -200,8 +200,6 @@ class SPSEO_BOL_Service
     }
 
     private function modifyLink( $matches ) {
-        // var_dump( str_replace(OW::getRouter()->getBaseUrl(), '', $matches[0]) );
-        // var_dump($matches[1]);
         $uri = $matches[1];
         $id = $matches[3];
 

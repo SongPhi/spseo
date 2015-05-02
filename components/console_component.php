@@ -43,7 +43,10 @@ class SPSEO_CMP_ConsoleComponent extends BASE_CMP_ConsoleDropdownMenu
         $language = OW::getLanguage();
         $js = "
             $('.spseo_edit_page_meta a').click(function() {
-                skeletonAjaxFloatBox = OW.ajaxFloatBox('SPSEO_CMP_PageMeta', {uri: '".OW::getRouter()->getUri()."'} , {width:'600px', iconClass: 'ow_ic_file', title: '".$language->text('spseo', 'floatbox_page_meta_title')."'});
+                pagemetaAjaxFloatBox = OW.ajaxFloatBox('SPSEO_CMP_PageMeta', {uri: '".OW::getRouter()->getUri()."'} , {width:'600px', iconClass: 'ow_ic_file', title: '".$language->text('spseo', 'floatbox_page_meta_title')."'});
+            });
+            $('.spseo_clear_urls_cache a').click(function() {
+                cachecleanerAjaxFloatBox = OW.ajaxFloatBox('SPSEO_CMP_CacheCleaner', {uri: '".OW::getRouter()->getUri()."'} , {width:'500px', iconClass: 'ow_ic_file', title: '".$language->text('spseo', 'floatbox_cache_cleaner_title')."'});
             });
         ";
 

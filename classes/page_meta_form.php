@@ -43,6 +43,7 @@ class SPSEO_CLASS_PageMetaForm extends Form
 
         if (is_object($obj)) {
         	$slugField = new TextField('slug');
+	        $slugField->setLabel($language->text('spseo','pgmtf_lbl_slug'));
 	        $slugField->setValue($obj->slug);
 	        $this->addElement($slugField);
 
@@ -50,9 +51,11 @@ class SPSEO_CLASS_PageMetaForm extends Form
         }
 
         $descriptionField = new TextArea('description');
+        $descriptionField->setLabel($language->text('spseo','pgmtf_lbl_description'));
         $this->addElement($descriptionField);
 
         $keywordsField = new TextArea('keywords');
+        $keywordsField->setLabel($language->text('spseo','pgmtf_lbl_keywords'));
         $this->addElement($keywordsField);
 
         // submit
