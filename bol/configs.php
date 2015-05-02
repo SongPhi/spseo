@@ -25,7 +25,7 @@
  * @since 1.0
  */
 
-class SPVIDEOLITE_BOL_Configs
+class SPSEO_BOL_Configs
 {
     const PLUGINKEY = 'spseo';
     
@@ -39,6 +39,8 @@ class SPVIDEOLITE_BOL_Configs
         'features.events' => true,
         'features.groups' => true,
         'options.redirect301' => true,
+        'console.console_menu_order' => 4,
+        'console.console_menu_hide' => false,
     );
     
     protected static $classInstance = null;

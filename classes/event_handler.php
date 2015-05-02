@@ -32,6 +32,8 @@ class SPSEO_CLASS_EventHandler
 
     protected static $classInstance = null;
 
+    private $config = null;
+
     public static function getInstance() {
         if ( null === self::$classInstance ) {
             self::$classInstance = new self();
@@ -47,15 +49,21 @@ class SPSEO_CLASS_EventHandler
         $em->bind(BASE_CMP_Console::EVENT_NAME, array($instance, 'addConsoleItem'));
     }
 
+    public function __construct() {
+        $this->config = SPSEO_BOL_Configs::getInstance();
+    }
+
     public function addConsoleItem( BASE_CLASS_EventCollector $event ) {
         $language = OW::getLanguage();
         $router = OW::getRouter();
+
+        if ($this->config->get('console.console_menu_hide')) return;
 
         if ( !OW::getUser()->isAdmin() ) return;
         if (strpos($router->getUri(), 'admin/')===0) return;
 
         $item = new SPSEO_CMP_ConsoleComponent();
-        $event->addItem($item, 999);
+        $event->addItem($item, $this->config->get('console.console_menu_order'));
     }
 
     public function onDocumentRender() {
@@ -66,14 +74,24 @@ class SPSEO_CLASS_EventHandler
         if (OW::getRequest()->isAjax() && OW::getRequest()->isPost()) return;
 
         // init bridges
-        SPSEO_CLASS_ForumBridge::getInstance();
-        SPSEO_CLASS_VideoBridge::getInstance();
-        SPSEO_CLASS_BlogBridge::getInstance();
-        SPSEO_CLASS_GroupsBridge::getInstance();
-        SPSEO_CLASS_EventsBridge::getInstance();
+        if ($this->config->get('features.forum') && $this->checkPlugin('forum'))
+            SPSEO_CLASS_ForumBridge::getInstance();
+        if ($this->config->get('features.video') && $this->checkPlugin('video')) 
+            SPSEO_CLASS_VideoBridge::getInstance();
+        if ($this->config->get('features.blogs') && $this->checkPlugin('blogs')) 
+            SPSEO_CLASS_BlogBridge::getInstance();
+        if ($this->config->get('features.groups') && $this->checkPlugin('groups')) 
+            SPSEO_CLASS_GroupsBridge::getInstance();
+        if ($this->config->get('features.events') && $this->checkPlugin('event')) 
+            SPSEO_CLASS_EventsBridge::getInstance();
 
         SPSEO_BOL_Service::getInstance()->handleRoutes();
         SPSEO_BOL_CacheService::getInstance();
+    }
+
+    private function checkPlugin($key) {
+        $opm = OW_PluginManager::getInstance();
+        return $opm->isPluginActive($key);
     }
 
 }
