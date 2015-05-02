@@ -27,7 +27,7 @@ class SPSEO_CMP_PageMeta extends OW_Component
 {
 	public function __construct($uri) {
         $language = OW::getLanguage();
-        $pageMetaForm = new SPSEO_CLASS_PageMetaForm( $uri );
+        $pageMetaForm = new SPSEO_FORM_PageMetaForm( $uri );
 
         $this->assign('isSlugAvailable', $pageMetaForm->isSlugAvailable());
         $this->addForm($pageMetaForm);

@@ -19,11 +19,11 @@
 
 /**
  * @author Thao Le <thaolt@songphi.com>
- * @package spseo.classes
+ * @package spseo.forms
  * @since 1.0
  */
 
-class SPSEO_CLASS_RobotstxtForm extends Form
+class SPSEO_FORM_RobotstxtForm extends Form
 {
     public function __construct()
     {

@@ -53,7 +53,7 @@ class SPSEO_CTRL_Admin extends ADMIN_CTRL_Abstract
 	}
 
 	function robotstxt() {
-	    $robotstxtForm = new SPSEO_CLASS_RobotstxtForm();
+	    $robotstxtForm = new SPSEO_FORM_RobotstxtForm();
         
         $this->assign('isFtpRequired', $robotstxtForm->isFtpRequired());
 

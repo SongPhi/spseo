@@ -51,12 +51,11 @@ class SPSEO_CLASS_EventHandler
         $language = OW::getLanguage();
         $router = OW::getRouter();
 
+        if ( !OW::getUser()->isAdmin() ) return;
         if (strpos($router->getUri(), 'admin/')===0) return;
 
-        if ( OW::getUser()->isAdmin() ) {
-            $item = new SPSEO_CMP_ConsoleComponent();
-            $event->addItem($item, 999);
-        }
+        $item = new SPSEO_CMP_ConsoleComponent();
+        $event->addItem($item, 999);
     }
 
     public function onDocumentRender() {

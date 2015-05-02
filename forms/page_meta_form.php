@@ -19,11 +19,11 @@
 
 /**
  * @author Thao Le <thaolt@songphi.com>
- * @package spseo.classes
+ * @package spseo.forms
  * @since 1.0
  */
 
-class SPSEO_CLASS_PageMetaForm extends Form
+class SPSEO_FORM_PageMetaForm extends Form
 {
 	private $slugAvailable;
 
