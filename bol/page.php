@@ -28,7 +28,6 @@ class SPSEO_BOL_Page extends OW_Entity
 	
 	public $id;
 	public $hash;
-	public $slug;
 	public $uri;
 	public $meta_description;
 	public $meta_keywords;

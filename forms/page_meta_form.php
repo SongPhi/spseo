@@ -26,7 +26,6 @@
 class SPSEO_FORM_PageMetaForm extends Form
 {
 	private $slugAvailable;
-
 	
     public function __construct($uri)
     {

@@ -28,8 +28,6 @@
 
 class SPSEO_CLASS_EventHandler
 {
-
-
     protected static $classInstance = null;
 
     private $config = null;
@@ -76,12 +74,16 @@ class SPSEO_CLASS_EventHandler
         // init bridges
         if ($this->config->get('features.forum') && $this->checkPlugin('forum'))
             SPSEO_CLASS_ForumBridge::getInstance();
+
         if ($this->config->get('features.video') && $this->checkPlugin('video')) 
             SPSEO_CLASS_VideoBridge::getInstance();
+
         if ($this->config->get('features.blogs') && $this->checkPlugin('blogs')) 
             SPSEO_CLASS_BlogBridge::getInstance();
+
         if ($this->config->get('features.groups') && $this->checkPlugin('groups')) 
             SPSEO_CLASS_GroupsBridge::getInstance();
+        
         if ($this->config->get('features.events') && $this->checkPlugin('event')) 
             SPSEO_CLASS_EventsBridge::getInstance();
 
@@ -90,8 +92,7 @@ class SPSEO_CLASS_EventHandler
     }
 
     private function checkPlugin($key) {
-        $opm = OW_PluginManager::getInstance();
-        return $opm->isPluginActive($key);
+        return OW_PluginManager::getInstance()->isPluginActive($key);
     }
 
 }

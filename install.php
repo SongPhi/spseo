@@ -18,10 +18,59 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+$dbPref = OW_DB_PREFIX.'spseo_';
+$tblPage = $dbPref.'page';
+$tblPageUrls = $dbPref.'page_urls';
+$tblUrl = $dbPref.'url';
 
-@OW::getPluginManager()->addPluginSettingsRouteName('spseo', 'spseo.admin');
+$installSQL = "CREATE TABLE IF NOT EXISTS `$tblPage` ( 
+	`id` INT( 255 ) UNSIGNED AUTO_INCREMENT NOT NULL, 
+	`hash` VARCHAR( 32 ) NOT NULL, 
+	`uri` VARCHAR( 255 ) NOT NULL, 
+	`meta_description` TEXT NULL, 
+	`meta_keywords` TEXT NULL,
+	 PRIMARY KEY ( `id` )
+, 
+	CONSTRAINT `unique_hash` UNIQUE( `hash` ), 
+	CONSTRAINT `unique_id` UNIQUE( `id` ), 
+	CONSTRAINT `unique_uri` UNIQUE( `uri` ) )
+ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `$tblPageUrls` ( 
+	`id` INT( 255 ) UNSIGNED AUTO_INCREMENT NOT NULL, 
+	`page_hash` VARCHAR( 32 ) NOT NULL, 
+	`url_hash` VARCHAR( 32 ) NOT NULL, 
+	`updated` INT( 255 ) UNSIGNED NOT NULL,
+	 PRIMARY KEY ( `page_hash`,`url_hash` )
+, 
+	CONSTRAINT `unique_id` UNIQUE( `id` ) )
+ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `$tblUrl` ( 
+	`id` INT( 255 ) UNSIGNED AUTO_INCREMENT NOT NULL, 
+	`uri` VARCHAR( 255 ) NOT NULL, 
+	`prefix` VARCHAR( 255 ) NULL, 
+	`slug` VARCHAR( 255 ) NULL, 
+	`friendly_uri` TEXT NULL, 
+	`updated` INT( 255 ) UNSIGNED NULL, 
+	`target_id` INT( 255 ) UNSIGNED NULL, 
+	`hash` VARCHAR( 32 ) NOT NULL,
+	 PRIMARY KEY ( `id` )
+, 
+	CONSTRAINT `unique_id` UNIQUE( `id` ), 
+	CONSTRAINT `unique_uri` UNIQUE( `uri` ) )
+ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+";
+
+OW::getDbo()->query($installSQL);
+
+try {
+	OW::getPluginManager()->addPluginSettingsRouteName('spseo', 'spseo.admin');
+} catch (Exception $e) { }
 
 try {
 	BOL_LanguageService::getInstance()->addPrefix('spseo','SimpleSEO');
 } catch (Exception $e) { }
 
+$path = dirname(__FILE__) . DS . 'langs.zip';
+BOL_LanguageService::getInstance()->importPrefixFromZip($path, 'spseo');
