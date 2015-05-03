@@ -58,7 +58,7 @@ class SPSEO_CLASS_EventHandler
         if ($this->config->get('console.console_menu_hide')) return;
 
         if ( !OW::getUser()->isAdmin() ) return;
-        if (strpos($router->getUri(), 'admin/')===0) return;
+        if (strpos($router->getUri(), 'admin')===0) return;
 
         $item = new SPSEO_CMP_ConsoleComponent();
         $event->addItem($item, $this->config->get('console.console_menu_order'));
