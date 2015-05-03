@@ -15,3 +15,40 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *}
+
+<div>
+	{form name='cleanCacheForm'}
+		<table class="ow_table_1 ow_form ow_stdmargin">
+	        <tbody>
+		        
+		        <tr class="ow_alt1 ow_tr_first">
+		            <td>
+		                {label name='optCurrentPage'}
+		            </td>
+		            <td>
+		                {input name='optCurrentPage'}
+		            </td>            
+		        </tr>
+		        <tr class="ow_alt2">
+		            <td>
+		                {label name='optAllPages'}
+		            </td>
+		            <td>
+		                {input name='optAllPages'}
+		            </td>            
+		        </tr>
+		        <tr class="ow_alt1 ow_tr_last">
+		            <td>
+		                {label name='optAllData'}
+		            </td>
+		            <td>
+		                {input name='optAllData'}
+		            </td>            
+		        </tr>
+		        
+	        </tbody>
+	    </table>
+		
+		<div style="text-align:center">{submit name='clean' class='ow_ic_warning ow_positive'}</div>
+	{/form}
+</div>

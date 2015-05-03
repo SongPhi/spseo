@@ -28,9 +28,30 @@ class SPSEO_FORM_CleanCacheForm extends Form
 	
     public function __construct()
     {
-        parent::__construct('pageMetaForm');
+        parent::__construct('cleanCacheForm');
         $language = OW::getLanguage();
 
+        $this->setAction(OW::getRouter()->urlForRoute('spseo.cleancache',array()));
+
+        $optCurrentPage = new CheckboxField('optCurrentPage');
+        $optCurrentPage->setLabel($language->text('spseo','clcachef_lbl_current_page'));
+        $optCurrentPage->setValue(true);
+        $this->addElement($optCurrentPage);
+
+        $optAllPages = new CheckboxField('optAllPages');
+        $optAllPages->setLabel($language->text('spseo','clcachef_lbl_all_pages'));
+        $optAllPages->setValue(false);
+        $this->addElement($optAllPages);
+
+        $optAllData = new CheckboxField('optAllData');
+        $optAllData->setLabel($language->text('spseo','clcachef_lbl_all_data'));
+        $optAllData->setValue(false);
+        $this->addElement($optAllData);
+
+        // submit
+        $submit = new Submit('clean');
+        $submit->setValue($language->text('spseo', 'btn_clean'));
+        $this->addElement($submit);
     }
 
     public function process()
