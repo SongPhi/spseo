@@ -45,7 +45,18 @@ class SPSEO_CTRL_Admin extends ADMIN_CTRL_Abstract
 	}
 
 	function index() {
-	    $this->setPageHeading( $this->language->text( 'spseo', 'adm_configuration' ) );
+
+	    $adminConfigForm = new SPSEO_FORM_AdminConfigForm();
+	    $this->addForm($adminConfigForm);
+
+	    if ( OW::getRequest()->isPost() && $adminConfigForm->isValid($_POST) )
+        {
+            $adminConfigForm->process();
+            OW::getFeedback()->info($this->language->text('spseo', 'config_updated'));
+            $this->redirect(OW::getRouter()->urlForRoute('spseo.admin'));
+        } else {
+	    	$this->setPageHeading( $this->language->text( 'spseo', 'adm_configuration' ) );
+        }
 	}
 
 	function pages() {

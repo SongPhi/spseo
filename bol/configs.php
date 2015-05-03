@@ -59,7 +59,7 @@ class SPSEO_BOL_Configs
     protected function __construct() {
         $this->configs = OW::getConfig()->getValues(self::PLUGINKEY);
         if (!is_array($this->configs)) $this->configs = array();
-        register_shutdown_function(array(&$this, 'saveConfigs'));
+        // register_shutdown_function(array(&$this, 'saveConfigs'));
     }
     
     public function get($key) {
@@ -93,11 +93,11 @@ class SPSEO_BOL_Configs
     
     public function saveConfigs() {
         if (!count($this->changes) > 0) return;
-        foreach ($this->changes as $key) {
-            if (OW::getConfig()->configExists(self::PLUGINKEY, $key)) {
-                OW::getConfig()->saveConfig(self::PLUGINKEY, $key, $this->configs[$key]);
+        foreach ($this->changes as $configKey) {
+            if (OW::getConfig()->configExists(self::PLUGINKEY, $configKey)) {
+                OW::getConfig()->saveConfig(self::PLUGINKEY, $configKey, $this->configs[$configKey]);
             } else {
-                OW::getConfig()->addConfig(self::PLUGINKEY, $key, $this->configs[$key]);
+                OW::getConfig()->addConfig(self::PLUGINKEY, $configKey, $this->configs[$configKey]);
             }
         }
     }

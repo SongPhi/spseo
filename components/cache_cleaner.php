@@ -27,6 +27,31 @@ class SPSEO_CMP_CacheCleaner extends OW_Component
 {
 	public function __construct() {
         $language = OW::getLanguage();
+
+        $cleanCacheForm = new SPSEO_FORM_CleanCacheForm( $uri );
+
+        $this->assign('isSlugAvailable', $pageMetaForm->isSlugAvailable());
+        $this->addForm($pageMetaForm);
+
+        $this->initJs();
+    }
+
+    public function initJs() {
+        $language = OW::getLanguage();
+        $js = "
+            owForms['pageMetaForm'].bind('submit',function(ev) { 
+            	$.post($(this).attr('action'),$(this).serialize(),function(data){
+					window.pagemetaAjaxFloatBox.close();
+                    OW.message('Page meta information has been updated!','info')
+            	},'json')
+					.fail(function(){
+
+					});
+                return false;
+            });
+        ";
+
+        OW::getDocument()->addOnloadScript($js);
     }
 
 }

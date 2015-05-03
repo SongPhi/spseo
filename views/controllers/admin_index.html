@@ -18,3 +18,67 @@
 
 {$menu}
 
+{form name=adminConfigForm}
+<div class="ow_wide ow_automargin">
+    <table class="ow_table_1 ow_form ow_stdmargin">
+        <tbody>
+        <tr class="ow_tr_first">
+            <th class="ow_name ow_txtleft" colspan="2">
+                <span class="ow_section_icon ow_ic_monitor">{text key='spseo+admincf_section_options'}</span>
+            </th>
+        </tr>
+        <tr class="ow_alt1">
+            <td>
+                {label name='optRedirect'}
+            </td>
+            <td>
+                {input name='optRedirect'}
+            </td>            
+        </tr>
+        <tr class="ow_alt2">
+            <td>
+                {label name='optConsoleOrder'}
+            </td>
+            <td>
+                {input name='optConsoleOrder' class="ow_settings_input"}
+            </td>
+        </tr>
+        <tr class="ow_alt1 ow_tr_last">
+            <td>{label name='optConsoleHide'}</td>
+            <td>{input name='optConsoleHide'}</td>
+        </tr>
+        <tr class="ow_tr_delimiter"><td></td></tr>
+        
+        <tr class="ow_tr_first">
+            <th class="ow_name ow_txtleft" colspan="2">
+                <span class="ow_section_icon ow_ic_lock">{text key='spseo+admincf_section_bridges'}</span>
+            </th>
+        </tr>
+        <tr class="ow_alt1">
+            <td>{label name='bridgeForum'}</td>
+            <td>{input name='bridgeForum'}</td>
+        </tr>
+        <tr class="ow_alt2">
+            <td>{label name='bridgeBlogs'}</td>
+            <td>{input name='bridgeBlogs'}</td>
+        </tr>
+
+        <tr class="ow_alt1">
+            <td>{label name='bridgeGroups'}</td>
+            <td>{input name='bridgeGroups'}</td>
+        </tr>
+
+        <tr class="ow_alt2">
+            <td>{label name='bridgeEvents'}</td>
+            <td>{input name='bridgeEvents'}</td>
+        </tr>
+
+        <tr class="ow_alt1 ow_tr_last">
+            <td>{label name='bridgeVideo'}</td>
+            <td>{input name='bridgeVideo'}</td>
+        </tr>
+        </tbody>
+    </table>
+    <p style="text-align:center">{submit name='save' class='ow_ic_save ow_positive'}</p>
+</div>
+{/form}

@@ -189,7 +189,8 @@ class SPSEO_BOL_Service
     }
 
     public function handleRoutes() {
-        $seoUrl = SPSEO_BOL_UrlService::getInstance()->findByUri(OW::getRouter()->getUri());
+        $uri = OW::getRouter()->getUri();
+        $seoUrl = SPSEO_BOL_UrlService::getInstance()->findByUri( $uri );
 
         if (is_object($seoUrl)) {
             header("HTTP/1.1 301 Moved Permanently"); 

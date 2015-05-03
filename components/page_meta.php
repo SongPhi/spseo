@@ -35,8 +35,7 @@ class SPSEO_CMP_PageMeta extends OW_Component
         $this->initJs();
     }
 
-    public function initJs()
-    {
+    public function initJs() {
         $language = OW::getLanguage();
         $js = "
             owForms['pageMetaForm'].bind('submit',function(ev) { 
