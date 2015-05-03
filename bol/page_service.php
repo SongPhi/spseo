@@ -1,4 +1,5 @@
-{**
+<?php
+/**
  * SPSEO - Simple Search Engine Optimization toolkit for Oxwall platform
  * Copyright (C) 2015 SONGPHI LLC.
  *
@@ -14,7 +15,40 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *}
+ */
 
-{$menu}
+/**
+ * @author Thao Le <thaolt@songphi.com>
+ * @package spseo.bol
+ * @since 1.0
+ */
 
+/**
+* 
+*/
+class SPSEO_BOL_PageService
+{
+	protected static $classInstance = null;
+
+	private $pageDao = null;
+
+	public static function getInstance() {
+		if (self::$classInstance === null) {
+			self::$classInstance = new self();
+		}
+
+		return self::$classInstance;
+	}
+
+	protected function __construct() {
+		$this->pageDao = SPSEO_BOL_PageDao::getInstance();
+	}
+
+	public function findByUri( $uri ) {
+		return $this->pageDao->findByUri( $uri );
+	}
+
+	public function update( SPSEO_BOL_Page $page ) {
+		return $this->pageDao->update($page);
+	}
+}

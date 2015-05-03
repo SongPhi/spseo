@@ -1,4 +1,5 @@
-{**
+<?php
+/**
  * SPSEO - Simple Search Engine Optimization toolkit for Oxwall platform
  * Copyright (C) 2015 SONGPHI LLC.
  *
@@ -14,7 +15,28 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *}
+ */
 
-{$menu}
+/**
+ * @author Thao Le <thaolt@songphi.com>
+ * @package spseo.forms
+ * @since 1.0
+ */
 
+class SPSEO_FORM_AdminConfigForm extends Form
+{
+	
+    public function __construct()
+    {
+        parent::__construct('adminConfigForm');
+        $language = OW::getLanguage();
+
+    }
+
+    public function process()
+    {
+        $values = $this->getValues();
+
+        return array('result' => true);
+    }
+}

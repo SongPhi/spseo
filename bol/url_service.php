@@ -23,9 +23,6 @@
  * @since 1.0
  */
 
-/**
-* 
-*/
 class SPSEO_BOL_UrlService
 {
 	protected static $classInstance = null;
@@ -59,5 +56,25 @@ class SPSEO_BOL_UrlService
 		$obj->slug = substr($friendlyUri, strlen($prefix));
 		$obj->slug = substr($obj->slug, 0, 0-(strlen($id)+1));
 		$this->urlDao->save( $obj );
+	}
+
+	public function updateSlug( SPSEO_BOL_Url $url ) {
+		$url->updated = time();
+		$url->friendly_uri = $url->prefix . $url->slug . '-' . $url->target_id;
+		$this->urlDao->save($url);
+
+		SPSEO_BOL_CacheService::getInstance()->updatePageSlug( $url->hash, $url->slug );
+
+		$pageUrlsDao = SPSEO_BOL_PageUrlsDao::getInstance();
+
+		$example = new OW_Example();
+        $example->andFieldEqual('url_hash', $url->hash);
+
+        $pages = $pageUrlsDao->findListByExample($example);
+
+        foreach ($pages as $page) {
+        	$cacheHash = $page->page_hash;
+        	SPSEO_BOL_CacheService::getInstance()->modifyPageUrl($cacheHash, $url->uri, $url->friendly_uri);
+        }
 	}
 }

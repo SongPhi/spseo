@@ -31,6 +31,27 @@ class SPSEO_CMP_PageMeta extends OW_Component
 
         $this->assign('isSlugAvailable', $pageMetaForm->isSlugAvailable());
         $this->addForm($pageMetaForm);
+
+        $this->initJs();
+    }
+
+    public function initJs()
+    {
+        $language = OW::getLanguage();
+        $js = "
+            owForms['pageMetaForm'].bind('submit',function(ev) { 
+            	$.post($(this).attr('action'),$(this).serialize(),function(data){
+					window.pagemetaAjaxFloatBox.close();
+                    OW.message('Page meta information has been updated!','info')
+            	},'json')
+					.fail(function(){
+
+					});
+                return false;
+            });
+        ";
+
+        OW::getDocument()->addOnloadScript($js);
     }
 
 }

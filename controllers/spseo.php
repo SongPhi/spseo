@@ -21,7 +21,32 @@
 class SPSEO_CTRL_Spseo extends OW_ActionController
 {
 	public function savepage() {
+		$language = OW::getLanguage();
 
+		$uri = '';
+
+		if (isset($_POST['uri'])) $uri = $_POST['uri'];
+
+        $pageMetaForm = new SPSEO_FORM_PageMetaForm( $uri );
+        $resp = array();
+
+        if ( OW::getRequest()->isPost() && $pageMetaForm->isValid($_POST) )
+        {
+            $resp = $pageMetaForm->process();
+            // OW::getFeedback()->info($this->language->text('spseo', 'robotstxt_updated'));
+        } else {
+        	$resp = array(
+        		'result' => 'false',
+
+        	);
+        }
+
+        header('Content-type: application/json');
+        $template = OW::getPluginManager()->getPlugin('spseo')->getCtrlViewDir() . 'spseo_savepage.html';
+        $this->setTemplate($template);
+
+        $this->assign('json', json_encode($resp));
+        die($this->render());
 	}
 
 	public function cleancache() {

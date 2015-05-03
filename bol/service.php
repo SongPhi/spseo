@@ -184,6 +184,8 @@ class SPSEO_BOL_Service
         OW::getRouter()->addRoute(new OW_Route('spseo.admin_help', 'admin/plugins/spseo/help', 'SPSEO_CTRL_Admin', 'index'));
 
         // front routes
+        OW::getRouter()->addRoute(new OW_Route('spseo.savepage', 'spseo/savepage', 'SPSEO_CTRL_Spseo', 'savepage'));
+        OW::getRouter()->addRoute(new OW_Route('spseo.cleancache', 'spseo/cleancache', 'SPSEO_CTRL_Spseo', 'cleancache'));
     }
 
     public function handleRoutes() {

@@ -43,4 +43,26 @@ class SPSEO_BOL_PageDao extends OW_BaseDao
         return OW_DB_PREFIX . 'spseo_page';
     }
 
+    public function findByUri( $uri ) {
+    	$example = new OW_Example();
+
+        $example->andFieldEqual('uri', $uri);
+
+        return $this->findObjectByExample($example);
+    }
+
+    public function update( $page ) {
+    	$tbl = $this->getTableName();
+    	$sql = "INSERT INTO $tbl ( `uri`,`hash`,`meta_description`,`meta_keywords` ) VALUES(?,?,?,?)
+    		ON DUPLICATE KEY UPDATE `meta_description` = ?, `meta_keywords`=?";
+    	return $this->dbo->update($sql, array(
+    		$page->uri,
+    		$page->hash,
+    		$page->meta_description,
+    		$page->meta_keywords,
+    		$page->meta_description,
+    		$page->meta_keywords
+		));
+    }
+
 }

@@ -90,9 +90,16 @@ class SPSEO_BOL_CacheService
 		return false;
 	}
 
-	public function updateSlug( $slug ) {
-		$this->data['slug'] = $slug;
-		$this->changed = true;
+	public function updatePageSlug( $hash, $slug ) {
+		$filepath = $this->cacheDir . DS . $hash;
+
+		$data = array();
+		
+		if (file_exists($filepath)) 
+			$data =  unserialize( file_get_contents( $filepath ) );
+
+		$data['slug'] = $slug;
+		file_put_contents($filepath, serialize($data));
 	}
 
 	public function getMetaData() {
@@ -101,12 +108,30 @@ class SPSEO_BOL_CacheService
 		return array();
 	}
 
-	public function updateMeta( array $meta ) {
-		$this->data['meta'] = $meta;
-		$this->changed = true;
+	public function updatePageMetaData( $hash, array $meta ) {
+		$filepath = $this->cacheDir . DS . $hash;
+		$data = array();
+
+		if (file_exists($filepath)) 
+			$data =  unserialize( file_get_contents( $filepath ) );
+
+		$data['meta'] = $meta;
+		file_put_contents($filepath, serialize($data));
 	}
 
 	public function pageHash() {
 		return $this->hash;
 	}
+
+	public function modifyPageUrl( $pageHash, $uri, $friendlyUri ) {
+		$filepath = $this->cacheDir . DS . $pageHash;
+		$data = array();
+		
+		if (file_exists($filepath)) 
+			$data =  unserialize( file_get_contents( $filepath ) );
+
+		$data['urls'][$uri] = $friendlyUri;
+		file_put_contents($filepath, serialize($data));		
+	}
+
 }
