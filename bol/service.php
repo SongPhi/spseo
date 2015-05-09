@@ -243,6 +243,7 @@ class SPSEO_BOL_Service
     }
 
     public function applyPageModifications() {
+        $cacheService = SPSEO_BOL_CacheService::getInstance();
         $doc = OW::getDocument();
         $newbody = $doc->getBody();
         // $time = microtime();
@@ -252,9 +253,20 @@ class SPSEO_BOL_Service
         // die(microtime()-$time);
         
         if (count($this->collected)>0)
-            SPSEO_BOL_PageUrlsDao::getInstance()->updatePageUrls(SPSEO_BOL_CacheService::getInstance()->pageHash(), $this->collected);
+            SPSEO_BOL_PageUrlsDao::getInstance()->updatePageUrls($cacheService->pageHash(), $this->collected);
 
         $doc->setBody($newbody);
+
+        // modify page meta data
+        $meta = $cacheService->getMetaData();
+
+        if (isset($meta['meta_description']) && strlen($meta['meta_description'])>0) {
+            $doc->setDescription($meta['meta_description']);
+        }
+
+        if (isset($meta['meta_keywords']) && strlen($meta['meta_keywords'])>0) {
+            $doc->setKeywords($meta['meta_keywords']);
+        }
     }
 
     public function slugify($text) {

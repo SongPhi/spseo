@@ -105,7 +105,7 @@ class SPSEO_BOL_CacheService
 	public function getMetaData() {
 		if (isset($this->data['meta']) && is_array($this->data['meta']))
 			return $this->data['meta'];
-		return array();
+		return array('meta'=>array('description'=>false,'keywords'=>false));
 	}
 
 	public function updatePageMetaData( $hash, array $meta ) {
