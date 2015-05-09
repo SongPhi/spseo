@@ -40,11 +40,15 @@ class SPSEO_CMP_CacheCleaner extends OW_Component
         $js = "
             owForms['cleanCacheForm'].bind('submit',function(ev) { 
             	$.post($(this).attr('action'),$(this).serialize(),function(data){
-					window.pagemetaAjaxFloatBox.close();
-                    OW.message('Page meta information has been updated!','info')
+                    if (data.result == true || data.result == 'true') {
+					    window.cachecleanerAjaxFloatBox.close();
+                        OW.message('".$language->text('spseo','clcachef_msg_success')."','info');
+                    } else {
+                        OW.message('".$language->text('spseo','clcachef_msg_failed_unknown')."','error');
+                    }
             	},'json')
 					.fail(function(){
-
+                        OW.message('".$language->text('spseo','clcachef_msg_no_connection')."','error');
 					});
                 return false;
             });

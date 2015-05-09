@@ -21,6 +21,8 @@
 define('SPSEO_DIR_ROOT', dirname(__FILE__));
 define('SPSEO_DIR_FORMS', SPSEO_DIR_ROOT . DS . 'forms');
 
+define('SPSEO_DB_PREFIX', OW_DB_PREFIX . 'spseo_');
+
 // adding package pointers for importers
 OW::getAutoloader()->addPackagePointer('SPSEO_FORM', SPSEO_DIR_FORMS);
 

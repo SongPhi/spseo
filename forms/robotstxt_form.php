@@ -32,25 +32,45 @@ class SPSEO_FORM_RobotstxtForm extends Form
         $language = OW::getLanguage();
 
         if (!is_writable(OW_DIR_ROOT.'robots.txt')) {
-	        $ftpUserField = new TextField('username');
-	        $ftpUserField->setRequired(true);
-            $ftpUserField->addAttribute('placeholder',$language->text('spseo', 'fphldr_username'));
-	        $this->addElement($ftpUserField);
 
-	        $ftpPasswordField = new TextField('password');
-            $ftpPasswordField->setRequired(true);
-	        $ftpPasswordField->addAttribute('placeholder',$language->text('spseo', 'fphldr_password'));
-	        $this->addElement($ftpPasswordField);
+            $ftpParams = is_array(OW::getSession()->get('ftpAttrs')) ? OW::getSession()->get('ftpAttrs') : false;
+            
+            $ftpConn = false;
 
-            $ftpHostField = new TextField('host');
-            $ftpHostField->setRequired(false);
-            $ftpHostField->addAttribute('placeholder',$language->text('spseo', 'fphldr_host'));
-            $this->addElement($ftpHostField);
+            if ($ftpParams !== false) {
+                try {
+                    $ftpConn = UTIL_Ftp::getConnection();
+                } catch (Exception $e) {
+                    $ftpConn = false;
+                }
+            }
 
-            $ftpPortField = new TextField('port');
-            $ftpPortField->setRequired(false);
-            $ftpPortField->addAttribute('placeholder',$language->text('spseo', 'fphldr_port'));
-            $this->addElement($ftpPortField);
+            if ($ftpConn === false) {
+                $ftpUserField = new TextField('username');
+                $ftpUserField->setRequired(true);
+                if (isset($ftpParams['login'])) $ftpUserField->setValue($ftpParams['login']);
+                $ftpUserField->addAttribute('placeholder',$language->text('spseo', 'fphldr_username'));
+                $this->addElement($ftpUserField);
+
+                $ftpPasswordField = new TextField('password');
+                $ftpPasswordField->setRequired(true);
+                if (isset($ftpParams['password'])) $ftpPasswordField->setValue($ftpParams['password']);
+                $ftpPasswordField->addAttribute('placeholder',$language->text('spseo', 'fphldr_password'));
+                $this->addElement($ftpPasswordField);
+
+                $ftpHostField = new TextField('host');
+                if (isset($ftpParams['host'])) 
+                    $ftpHostField->setValue($ftpParams['host']); 
+                else
+                    $ftpHostField->setValue('localhost'); 
+                $ftpHostField->addAttribute('placeholder',$language->text('spseo', 'fphldr_host'));
+                $this->addElement($ftpHostField);
+
+                $ftpPortField = new TextField('port');
+                if (isset($ftpParams['port'])) $ftpPortField->setValue($ftpParams['port']);
+                $ftpPortField->addAttribute('placeholder',$language->text('spseo', 'fphldr_port'));
+                $this->addElement($ftpPortField);
+            }
         }
 
         $fileContentField = new TextArea('content');
@@ -75,9 +95,43 @@ class SPSEO_FORM_RobotstxtForm extends Form
         if (is_writable(OW_DIR_ROOT.'robots.txt')) {
             file_put_contents(OW_DIR_ROOT.'robots.txt', $values['content']);
         } else {
-            
+            $tmpDir = SPSEO_BOL_Service::getInstance()->getTempDir();
+            $tmpFile = $tmpDir.DS.'robots.txt';
+
+            if (!file_exists($tmpDir)) {
+                mkdir($tmpDir, 0777, true);
+            } else {
+                if (!is_dir($tmpDir)) {
+                    unlink($tmpDir);
+                    mkdir($tmpDir, 0777, true);
+                }
+            }
+
+            $tmpFile = $tmpDir.DS.'robots.txt';
+
+            file_put_contents($tmpFile, $values['content']);
+
+            $ftpParams = false;
+
+            if (isset($values['username'])) {
+                $ftpParams = array(
+                    'login' => $values['username'],
+                    'password' => $values['password'],
+                    'host' => $values['host'],
+                    'port' => $values['port']
+                );
+                OW::getSession()->set('ftpAttrs',$ftpParams);
+            } else {
+                $ftpParams = OW::getSession()->get('ftpAttrs');
+            }
+
+            $ftpConn = false;
+            if ($ftpParams !== false) {
+                $ftpConn = UTIL_Ftp::getConnection($ftpParams);
+                $ftpConn->upload($tmpFile, 'robots.txt');
+            }            
         }
 
-        return array('result' => true);
+        return true;
     }
 }

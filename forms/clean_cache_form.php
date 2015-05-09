@@ -26,12 +26,17 @@
 class SPSEO_FORM_CleanCacheForm extends Form
 {
 	
-    public function __construct()
+    public function __construct( $uri )
     {
         parent::__construct('cleanCacheForm');
         $language = OW::getLanguage();
 
         $this->setAction(OW::getRouter()->urlForRoute('spseo.cleancache',array()));
+
+        $uriField = new HiddenField('uri');
+        $uriField->setRequired();
+        $uriField->setValue($uri);
+        $this->addElement($uriField);
 
         $optCurrentPage = new CheckboxField('optCurrentPage');
         $optCurrentPage->setLabel($language->text('spseo','clcachef_lbl_current_page'));
@@ -57,7 +62,25 @@ class SPSEO_FORM_CleanCacheForm extends Form
     public function process()
     {
         $values = $this->getValues();
+        $language = OW::getLanguage();
+        $cacheSrv = SPSEO_BOL_CacheService::getInstance();
 
-        return array('result' => true);
+        if (!$values['optCurrentPage'] && !$values['optAllPages'] && !$values['optAllData']) {
+            return array('result' => 'false', 'errmsg' => $language->text('spseo','clcachef_msg_empty_post') );
+        }
+
+        $rs = true;
+
+        if ($values['optAllPages']) {
+            $rs = $rs && $cacheSrv->cleanAllPages();
+        } elseif ($values['optCurrentPage']) {
+            $rs = $rs && $cacheSrv->cleanPage(crc32($values['uri']));
+        }
+
+        if ($values['optAllData']) {
+            $rs = $rs && $cacheSrv->cleanDatabase();
+        }
+
+        return array('result' => $rs);
     }
 }

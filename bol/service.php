@@ -181,7 +181,7 @@ class SPSEO_BOL_Service
         // OW::getRouter()->addRoute(new OW_Route('spseo.admin_urls', 'admin/plugins/spseo/urls', 'SPSEO_CTRL_Admin', 'index'));
         // OW::getRouter()->addRoute(new OW_Route('spseo.admin_sitemap', 'admin/plugins/spseo/sitemap', 'SPSEO_CTRL_Admin', 'index'));
         OW::getRouter()->addRoute(new OW_Route('spseo.admin_robotstxt', 'admin/plugins/spseo/robotstxt', 'SPSEO_CTRL_Admin', 'robotstxt'));
-        OW::getRouter()->addRoute(new OW_Route('spseo.admin_help', 'admin/plugins/spseo/help', 'SPSEO_CTRL_Admin', 'index'));
+        OW::getRouter()->addRoute(new OW_Route('spseo.admin_help', 'admin/plugins/spseo/help', 'SPSEO_CTRL_Admin', 'help'));
 
         // front routes
         OW::getRouter()->addRoute(new OW_Route('spseo.savepage', 'spseo/savepage', 'SPSEO_CTRL_Spseo', 'savepage'));
@@ -278,6 +278,43 @@ class SPSEO_BOL_Service
         }
      
         return $text;
+    }
+
+    public function defaultRobotsTxt() {
+        $content = <<<TEXT
+# 
+# This file contains rules to prevent the crawling and indexing of certain parts 
+# of your web site by spiders of a major search engines likes Google and Yahoo. 
+# By managing these rules you can allow or disallow access to specific folders
+# and files for such spyders. 
+# The good way to hide private data or save a lot of bandwidth. 
+#
+#
+# For more information about the robots.txt standard, see:
+# http://www.robotstxt.org/wc/robots.html
+#
+# For syntax checking, see:
+# http://www.sxw.org.uk/computing/robots/check.html
+
+
+User-agent: *
+
+#Files
+Disallow: ow_version.xml
+Disallow: INSTALL.txt
+Disallow: LICENSE.txt
+Disallow: README.txt
+Disallow: UPDATE.txt
+Disallow: CHANGES.txt
+
+# URLs
+Disallow: /admin/
+TEXT;
+        return $content;
+    }
+
+    public function getTempDir() {
+        return self::getPlugin()->getPluginFilesDir() . 'tmp';
     }
     
 }

@@ -50,7 +50,8 @@ class SPSEO_FORM_PageMetaForm extends Form
 	        $slugField->setLabel($language->text('spseo','pgmtf_lbl_slug'));
 	        $slugField->setValue($this->urlObj->slug);
             $slugValidator = new RegExpValidator('/^[a-z0-9\\-_]+$/i');
-            $slugValidator->setErrorMessage('Invalid slug format, only alphanumeric and dash(-) are allowed!');
+            $slugValidator->setErrorMessage($language->text('spseo','pgmtf_msg_invalid_slug'));
+            //Invalid slug format, only alphanumeric and dash(-) are allowed!
             $slugField->addValidator($slugValidator);
 	        $this->addElement($slugField);
 

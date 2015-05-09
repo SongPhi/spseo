@@ -33,11 +33,9 @@ class SPSEO_CTRL_Spseo extends OW_ActionController
         if ( OW::getRequest()->isPost() && $pageMetaForm->isValid($_POST) )
         {
             $resp = $pageMetaForm->process();
-            // OW::getFeedback()->info($this->language->text('spseo', 'robotstxt_updated'));
         } else {
         	$resp = array(
         		'result' => 'false',
-
         	);
         }
 
@@ -50,7 +48,16 @@ class SPSEO_CTRL_Spseo extends OW_ActionController
 	}
 
 	public function cleancache() {
-		
+		$cleanCacheForm = new SPSEO_FORM_CleanCacheForm( '' );
+        $resp = array(
+            'result' => 'false',
+        );
+        if ( OW::getRequest()->isPost() && $cleanCacheForm->isValid($_POST) )
+        {
+            $resp = $cleanCacheForm->process();
+        }
+        header('Content-type: application/json');
+        die(json_encode($resp));
 	}
 }
 

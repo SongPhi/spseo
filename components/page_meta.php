@@ -41,7 +41,7 @@ class SPSEO_CMP_PageMeta extends OW_Component
             owForms['pageMetaForm'].bind('submit',function(ev) { 
             	$.post($(this).attr('action'),$(this).serialize(),function(data){
 					window.pagemetaAjaxFloatBox.close();
-                    OW.message('Page meta information has been updated!','info')
+                    OW.message('".$language->text('spseo','pgmtf_msg_success')."','info')
             	},'json')
 					.fail(function(){
 

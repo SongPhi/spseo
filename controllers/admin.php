@@ -72,12 +72,21 @@ class SPSEO_CTRL_Admin extends ADMIN_CTRL_Abstract
 
         if ( OW::getRequest()->isPost() && $robotstxtForm->isValid($_POST) )
         {
-            $robotstxtForm->process();
-            OW::getFeedback()->info($this->language->text('spseo', 'robotstxt_updated'));
+        	try {
+            	$robotstxtForm->process();
+            	OW::getFeedback()->info($this->language->text('spseo', 'robotstxt_updated'));
+        	} catch (Exception $e) {
+        		OW::getFeedback()->error($this->language->text('spseo', 'robotstxt_save_error'));
+        	}
             $this->redirect(OW::getRouter()->urlForRoute('spseo.admin_robotstxt'));
         } else {
 	    	$this->setPageHeading( $this->language->text( 'spseo', 'adm_menu_robottxt' ) );
         }
+	}
+
+	function help() {
+    	$language = OW::getLanguage();
+		$this->setPageHeading( $language->text( 'spseo', 'adm_menu_help' ) );
 	}
 
 	function getMenu() {

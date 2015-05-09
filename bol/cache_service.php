@@ -134,4 +134,40 @@ class SPSEO_BOL_CacheService
 		file_put_contents($filepath, serialize($data));		
 	}
 
+	public function cleanAllPages() {
+		$files = glob($this->cacheDir . DS .'*'); // get all file names
+		foreach($files as $file){ // iterate files
+		  if(is_file($file))
+		  	try {
+		    	unlink($file); 
+		  	} catch (Exception $e) {
+		  		return false;
+		  	}
+		}
+		return true;
+	}
+
+	public function cleanPage($hash) {
+		$file = $this->cacheDir . DS . $hash;
+		if(is_file($file))
+		    return unlink($file);
+		return false;
+	}
+
+	public function cleanDatabase() {
+		try {			
+			$dbo = OW::getDbo();
+			$sql = 'TRUNCATE TABLE `'.SPSEO_DB_PREFIX.'page`;';
+			$dbo->update($sql);
+			$sql = 'TRUNCATE TABLE `'.SPSEO_DB_PREFIX.'page_urls`;';
+			$dbo->update($sql);
+			$sql = 'TRUNCATE TABLE `'.SPSEO_DB_PREFIX.'url`;';
+			$dbo->update($sql);
+			return true;
+		} catch (Exception $e) {
+			return false;
+		}
+		return true;
+	}
+
 }
