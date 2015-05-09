@@ -7,7 +7,7 @@ Simple Search Engine Optimization toolkit for Oxwall platform
 ## REFERENCES
 
 * Demo page: http://owdemo.songphi.com/
-* Store page: http://oxwall.org/store
+* Store page: http://www.oxwall.org/store/item/1097
 * Issues tracking: https://github.com/SongPhi/spseo/issues
 * Wiki: https://github.com/SongPhi/spseo/wiki
 
