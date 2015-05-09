@@ -10,5 +10,5 @@
   <build>10000</build>
   <copyright>(C) 2015 SongPhi LLC. All rights reserved.</copyright>
   <license>AGPL3</license>
-  <licenseUrl>>https://raw.githubusercontent.com/SongPhi/spseo/master/LICENSE</licenseUrl>
+  <licenseUrl>https://raw.githubusercontent.com/SongPhi/spseo/master/LICENSE</licenseUrl>
 </plugin>
