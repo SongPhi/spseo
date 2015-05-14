@@ -34,7 +34,6 @@ class SPSEO_FORM_CleanCacheForm extends Form
         $this->setAction(OW::getRouter()->urlForRoute('spseo.cleancache',array()));
 
         $uriField = new HiddenField('uri');
-        $uriField->setRequired();
         $uriField->setValue($uri);
         $this->addElement($uriField);
 
