@@ -25,27 +25,33 @@
 
 class SPSEO_FORM_RobotstxtForm extends Form
 {
+    private $ftpRequired;
+
     public function __construct()
     {
         parent::__construct('robotstxtForm');
 
         $language = OW::getLanguage();
 
+
+        $this->ftpRequired = false; 
+
         if (!is_writable(OW_DIR_ROOT.'robots.txt')) {
 
             $ftpParams = is_array(OW::getSession()->get('ftpAttrs')) ? OW::getSession()->get('ftpAttrs') : false;
             
-            $ftpConn = false;
+            $ftpConn = false;            
 
             if ($ftpParams !== false) {
                 try {
-                    $ftpConn = UTIL_Ftp::getConnection();
+                    @$ftpConn = UTIL_Ftp::getConnection($ftpParams);
                 } catch (Exception $e) {
                     $ftpConn = false;
                 }
             }
 
-            if ($ftpConn === false) {
+            if (!$ftpConn) {
+                $this->ftpRequired = true;
                 $ftpUserField = new TextField('username');
                 $ftpUserField->setRequired(true);
                 if (isset($ftpParams['login'])) $ftpUserField->setValue($ftpParams['login']);
@@ -85,7 +91,7 @@ class SPSEO_FORM_RobotstxtForm extends Form
     }
 
     public function isFtpRequired() {
-    	return !is_writable(OW_DIR_ROOT.'robots.txt');
+    	return $this->ftpRequired;
     }
 
     public function process()
