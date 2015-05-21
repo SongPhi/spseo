@@ -18,18 +18,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('SPSEO_DIR_ROOT', dirname(__FILE__));
-define('SPSEO_DIR_FORMS', SPSEO_DIR_ROOT . DS . 'forms');
+if ( !defined('OW_CRON') ) {
 
-define('SPSEO_DB_PREFIX', OW_DB_PREFIX . 'spseo_');
+	define('SPSEO_DIR_ROOT', dirname(__FILE__));
+	define('SPSEO_DIR_FORMS', SPSEO_DIR_ROOT . DS . 'forms');
 
-// adding package pointers for importers
-OW::getAutoloader()->addPackagePointer('SPSEO_FORM', SPSEO_DIR_FORMS);
+	define('SPSEO_DB_PREFIX', OW_DB_PREFIX . 'spseo_');
 
-// Routes declaration
-SPSEO_BOL_Service::declareRoutes();
+	// adding package pointers for importers
+	OW::getAutoloader()->addPackagePointer('SPSEO_FORM', SPSEO_DIR_FORMS);
 
-// Events handling
-SPSEO_CLASS_EventHandler::initialization();
+	// Routes declaration
+	SPSEO_BOL_Service::declareRoutes();
 
+	// Events handling
+	SPSEO_CLASS_EventHandler::initialization();
+
+}
 
