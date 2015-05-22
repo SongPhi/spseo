@@ -46,7 +46,7 @@ class SPSEO_CLASS_GroupsBridge implements SPSEO_CLASS_BridgeInterface
 
 	public function handleRoutes() {
 		$matches = array();
-        if (preg_match('#^groups/.*?\-(\d+)(/edit)?$#i', OW::getRouter()->getUri(), $matches)) {
+        if (preg_match('#^groups/.*?\-(\d+)(/edit|/join)?$#i', OW::getRouter()->getUri(), $matches)) {
             OW::getRouter()->setUri('groups/'.$matches[1].(isset($matches[2])?$matches[2]:''));
             return true;
         }
