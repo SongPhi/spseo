@@ -46,9 +46,10 @@ class SPSEO_CLASS_GroupsBridge implements SPSEO_CLASS_BridgeInterface
 
 	public function handleRoutes() {
 		$matches = array();
+		$this->origUri = OW::getRouter()->getUri();
         if (preg_match('#^groups/.*?\-(\d+)(/edit|/join|/users)?$#i', OW::getRouter()->getUri(), $matches)) {
             OW::getRouter()->setUri('groups/'.$matches[1].(isset($matches[2])?$matches[2]:''));
-            return true;
+            return $matches[1];
         }
         return false;
 	}
@@ -57,5 +58,9 @@ class SPSEO_CLASS_GroupsBridge implements SPSEO_CLASS_BridgeInterface
         $group = GROUPS_BOL_Service::getInstance()->findGroupById($id);
         $slug = SPSEO_BOL_Service::getInstance()->slugify($group->title).'-'.$group->id;
         return 'groups/'.$slug;
+    }
+
+    public function getOpenGraphData($id) {
+		return false;
     }
 }

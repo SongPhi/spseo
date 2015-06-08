@@ -32,6 +32,7 @@
 class SPSEO_CLASS_VideoBridge implements SPSEO_CLASS_BridgeInterface
 {
 	protected static $classInstance = null;
+	private $origUri;
 
 	public static function getInstance() {
 		if (self::$classInstance === null)  {
@@ -46,9 +47,10 @@ class SPSEO_CLASS_VideoBridge implements SPSEO_CLASS_BridgeInterface
 
 	public function handleRoutes() {
 		$matches = array();
-        if (preg_match('#^video/view/.*?\-(\d+)$#i', OW::getRouter()->getUri(), $matches)) {
+		$this->origUri = OW::getRouter()->getUri();
+        if (preg_match('#^video/view/.*?\-(\d+)$#i', $this->origUri, $matches)) {
             OW::getRouter()->setUri('video/view/'.$matches[1]);
-            return true;
+            return $matches[1];
         }
         return false;
 	}
@@ -57,5 +59,18 @@ class SPSEO_CLASS_VideoBridge implements SPSEO_CLASS_BridgeInterface
         $clip = VIDEO_BOL_ClipService::getInstance()->findClipById($id);
         $slug = SPSEO_BOL_Service::getInstance()->slugify($clip->title).'-'.$clip->id;
         return 'video/view/'.$slug;
+    }
+
+    public function getOpenGraphData($id) {
+    	$clip = VIDEO_BOL_ClipService::getInstance()->findClipById($id);
+    	$cacheService = SPSEO_BOL_CacheService::getInstance();
+    	$ogdata = array(
+    		'title' => addslashes( strip_tags($clip->title) ),
+    		'image' => $clip->thumbUrl,
+    		'type' => 'video',
+    		'url' => (OW::getRouter()->getBaseUrl() . $this->origUri),
+    		'description' => htmlentities( str_replace("\r", '', str_replace("\n", ' ', strip_tags($clip->description))) )
+    	);
+		return $ogdata;
     }
 }

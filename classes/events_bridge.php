@@ -46,7 +46,8 @@ class SPSEO_CLASS_EventsBridge implements SPSEO_CLASS_BridgeInterface
 
 	public function handleRoutes() {
 		$matches = array();
-        if (preg_match('#^event/.*?\-(\d+)$#i', OW::getRouter()->getUri(), $matches)) {
+		$this->origUri = OW::getRouter()->getUri();
+        if (preg_match('#^event/.*?\-(\d+)$#i', $this->origUri, $matches)) {
             OW::getRouter()->setUri('event/'.$matches[1]);
             return true;
         }
@@ -57,5 +58,18 @@ class SPSEO_CLASS_EventsBridge implements SPSEO_CLASS_BridgeInterface
         $event = EVENT_BOL_EventService::getInstance()->findEvent($id);
         $slug = SPSEO_BOL_Service::getInstance()->slugify($event->title).'-'.$event->id;
         return 'event/'.$slug;
+    }
+
+    public function getOpenGraphData($id) {
+    	$event = EVENT_BOL_EventService::getInstance()->findEvent($id);
+    	$cacheService = SPSEO_BOL_CacheService::getInstance();
+    	$ogdata = array(
+    		'title' => addslashes( strip_tags($event->title) ),
+    		'image' => EVENT_BOL_EventService::getInstance()->generateImageUrl($event->getImage()),
+    		'type' => 'website',
+    		'url' => (OW::getRouter()->getBaseUrl() . $this->origUri),
+    		'description' => htmlentities( str_replace("\r", '', str_replace("\n", ' ', strip_tags($event->description))) )
+    	);
+		return $ogdata;
     }
 }

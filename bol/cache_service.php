@@ -170,4 +170,17 @@ class SPSEO_BOL_CacheService
 		return true;
 	}
 
+	public function getOpenGraphData() {
+		if (isset($this->data['og']) && is_array($this->data['og']))
+			return $this->data['og'];
+		else 
+			return false;
+	}
+
+	public function setOpenGraphData($ogdata) {
+		if (!isset( $this->data['og'] ) || $this->data['og'] != $ogdata) 
+			$this->changed = true;
+		$this->data['og'] = $ogdata;
+	}
+
 }

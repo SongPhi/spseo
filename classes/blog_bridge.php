@@ -49,13 +49,14 @@ class SPSEO_CLASS_BlogBridge implements SPSEO_CLASS_BridgeInterface
 
 	public function handleRoutes() {
 		$matches = array();
-        if (preg_match('#^blogs/.*?\-(\d+)$#i', OW::getRouter()->getUri(), $matches)) {
+		$this->origUri = OW::getRouter()->getUri();
+        if (preg_match('#^blogs/.*?\-(\d+)$#i', $this->origUri, $matches)) {
             OW::getRouter()->setUri('blogs/'.$matches[1]);
-            return true;
+            return $matches[1];
         }
-        if (preg_match('#^blogs/post/.*?\-(\d+)$#i', OW::getRouter()->getUri(), $matches)) {
+        if (preg_match('#^blogs/post/.*?\-(\d+)$#i', $this->origUri, $matches)) {
             OW::getRouter()->setUri('blogs/'.$matches[1]);
-            return true;
+            return $matches[1];
         }
         return false;
 	}
@@ -65,4 +66,45 @@ class SPSEO_CLASS_BlogBridge implements SPSEO_CLASS_BridgeInterface
         $slug = SPSEO_BOL_Service::getInstance()->slugify($post->title).'-'.$post->id;
         return 'blogs/'.$slug;
     }
+
+    private function findFirstImage($content) {
+    	$matches = array();
+    	$ok = preg_match_all('#<img.*?src=(\'|")(.*?)(\'|").*?>#i', $content, $matches);
+
+    	if ($ok) 
+    		return $matches[2][0];
+    	return false;
+    }
+
+    public function getOpenGraphData($id) {
+    	$post = PostService::getInstance()->findById($id);
+    	$cacheService = SPSEO_BOL_CacheService::getInstance();
+    	$ogdata = array(
+    		'title' => addslashes( strip_tags($post->getTitle()) ),
+    		'type' => 'article',
+    		'url' => (OW::getRouter()->getBaseUrl() . $this->origUri)
+		);
+		$content = $post->getPost();
+
+		$preview = explode("<!--more-->", $content);
+
+		if ( !count($preview)>1 ) {
+            $preview = explode('<!--page-->', $preview[0]);
+        }
+
+        $preview = $preview[0];
+
+		$ogdata['description'] = htmlentities( str_replace("\r", '', str_replace("\n", ' ', strip_tags(
+			UTIL_String::truncate( strip_tags($preview), 145, '...' )  
+		))) );
+
+		$image = $this->findFirstImage($content);
+		if ($image!==false) {
+			$ogdata['image'] = $image;
+		}
+
+		return $ogdata;
+    }
+
+
 }

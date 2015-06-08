@@ -94,4 +94,8 @@ class SPSEO_CLASS_ForumBridge implements SPSEO_CLASS_BridgeInterface
 
         return $friendlyUrl;
     }
+
+    public function getOpenGraphData($id) {
+        return false;
+    }
 }

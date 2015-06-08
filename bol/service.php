@@ -198,7 +198,18 @@ class SPSEO_BOL_Service
         }
 
         foreach ($this->bridges as $bridge) {
-            if ($bridge->handleRoutes()) break;
+            $id = $bridge->handleRoutes();
+            if ($id!==false) {
+                $cacheService = SPSEO_BOL_CacheService::getInstance();
+                $ogdata = $cacheService->getOpenGraphData();
+                if ($ogdata === false) {
+                    $ogdata = $bridge->getOpenGraphData($id);
+                }
+                if ($ogdata !== false) {
+                    $cacheService->setOpenGraphData($ogdata);
+                }
+                break;
+            }
         }
     }
 
@@ -259,6 +270,7 @@ class SPSEO_BOL_Service
 
         // modify page meta data
         $meta = $cacheService->getMetaData();
+        $ogdata = $cacheService->getOpenGraphData();
 
         if (isset($meta['meta_description']) && strlen($meta['meta_description'])>0) {
             $doc->setDescription($meta['meta_description']);
@@ -266,6 +278,12 @@ class SPSEO_BOL_Service
 
         if (isset($meta['meta_keywords']) && strlen($meta['meta_keywords'])>0) {
             $doc->setKeywords($meta['meta_keywords']);
+        }
+
+        if ($ogdata!==false && is_array($ogdata)) {
+            foreach ($ogdata as $key => $value) {
+                $doc->addMetaInfo('og:'.$key,$value,"property");
+            }
         }
     }
 
