@@ -63,14 +63,19 @@ class SPSEO_CLASS_VideoBridge implements SPSEO_CLASS_BridgeInterface
 
     public function getOpenGraphData($id) {
     	$clip = VIDEO_BOL_ClipService::getInstance()->findClipById($id);
-    	$cacheService = SPSEO_BOL_CacheService::getInstance();
-    	$ogdata = array(
-    		'title' => addslashes( strip_tags($clip->title) ),
-    		'image' => $clip->thumbUrl,
-    		'type' => 'video',
-    		'url' => (OW::getRouter()->getBaseUrl() . $this->origUri),
-    		'description' => htmlentities( str_replace("\r", '', str_replace("\n", ' ', strip_tags($clip->description))) )
-    	);
-		return $ogdata;
+        $cacheService = SPSEO_BOL_CacheService::getInstance();
+        $image = $clip->thumbUrl;
+        if (substr($image, 0,2)=='//')
+                $image = 'http:' . $image;
+        if (substr($image, 0,7)!='http://' && substr($image, 0,8)!='https://')
+                $image = 'http://' . $image;
+        $ogdata = array(
+                'title' => addslashes( strip_tags($clip->title) ),
+                'image' => $image,
+                'type' => 'video',
+                'url' => (OW::getRouter()->getBaseUrl() . $this->origUri),
+                'description' => htmlentities( str_replace("\r", '', str_replace("\n", ' ', strip_tags($clip->description))) )
+        );
+        return $ogdata;
     }
 }
