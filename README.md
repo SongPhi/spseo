@@ -20,6 +20,13 @@ Simple Search Engine Optimization toolkit for Oxwall platform
 * Support built-in Oxwall plugins: Forum,Event,Blogs,Groups,Video
 * Integated OpenGraph API for: Blog, Video
 
+## DEMONSTRATION
+
+Try to share following URLs in your Facebook feed.
+
+* https://owdemo.songphi.com/blogs/lorem-ipsum-dolor-sit-amet-62
+* https://owdemo.songphi.com/video/view/quot-get-yourself-together-quot-christina-grimmie-with-love-155
+
 ## CONTRIBUTORS
 
 * Thao Le (developer)
