@@ -18,6 +18,7 @@ Simple Search Engine Optimization toolkit for Oxwall platform
 * Pages meta data editor
 * Cache Engine (file + database)
 * Support built-in Oxwall plugins: Forum,Event,Blogs,Groups,Video
+* Integated OpenGraph API for: Blog, Video
 
 ## CONTRIBUTORS
 
