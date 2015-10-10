@@ -288,10 +288,12 @@ class SPSEO_BOL_Service
     }
 
     public function slugify($text) {
-        $text = strtolower($text);
+        $text = htmlspecialchars_decode($text);
         $text = str_replace(array_keys($this->char_map), $this->char_map, $text);
+        $text = strtolower($text);
         
         $text = preg_replace('~[^\\pL\d]+~u', '-', $text);
+        $text = preg_replace('/[^a-z0-9\-]/i', '-', $text);
      
         $text = trim($text, '-');
      

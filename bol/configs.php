@@ -59,7 +59,7 @@ class SPSEO_BOL_Configs
     protected function __construct() {
         $this->configs = OW::getConfig()->getValues(self::PLUGINKEY);
         if (!is_array($this->configs)) $this->configs = array();
-        // register_shutdown_function(array(&$this, 'saveConfigs'));
+        register_shutdown_function(array(&$this, 'saveConfigs'));
     }
     
     public function get($key) {
