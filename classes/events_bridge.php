@@ -61,15 +61,16 @@ class SPSEO_CLASS_EventsBridge implements SPSEO_CLASS_BridgeInterface
     }
 
     public function getOpenGraphData($id) {
-    	$event = EVENT_BOL_EventService::getInstance()->findEvent($id);
-    	$cacheService = SPSEO_BOL_CacheService::getInstance();
-    	$ogdata = array(
-    		'title' => addslashes( strip_tags($event->title) ),
-    		'image' => EVENT_BOL_EventService::getInstance()->generateImageUrl($event->getImage()),
-    		'type' => 'website',
-    		'url' => (OW::getRouter()->getBaseUrl() . $this->origUri),
-    		'description' => htmlentities( str_replace("\r", '', str_replace("\n", ' ', strip_tags($event->description))) )
-    	);
-		return $ogdata;
+  //   	$event = EVENT_BOL_EventService::getInstance()->findEvent($id);
+  //   	$cacheService = SPSEO_BOL_CacheService::getInstance();
+  //   	$ogdata = array(
+  //   		'title' => addslashes( strip_tags($event->title) ),
+  //   		'image' => EVENT_BOL_EventService::getInstance()->generateImageUrl($event->getImage()),
+  //   		'type' => 'website',
+  //   		'url' => (OW::getRouter()->getBaseUrl() . $this->origUri),
+  //   		'description' => htmlentities( str_replace("\r", '', str_replace("\n", ' ', strip_tags($event->description))) )
+  //   	);
+		// return $ogdata;
+        return array();
     }
 }
