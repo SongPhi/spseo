@@ -221,7 +221,7 @@ class SPSEO_BOL_Service
         $friendlyUri = $cacheService->findFriendlyUri($uri);
         
         if ($friendlyUri !== false) 
-            return OW::getRouter()->getBaseUrl().$friendlyUri;
+            return "href=\"".OW::getRouter()->getBaseUrl().$friendlyUri."\"";
         
         $urlService = SPSEO_BOL_UrlService::getInstance();
         $hash = crc32($uri);
@@ -246,11 +246,11 @@ class SPSEO_BOL_Service
             $this->collected[] = $hash;
 
             $cacheService->updateFriendlyUri( $uri, $friendlyUri );
-            return OW::getRouter()->getBaseUrl().$friendlyUri;
+            return "href=\"".OW::getRouter()->getBaseUrl().$friendlyUri."\"";
         }
 
         $cacheService->updateFriendlyUri( $uri, $uri );
-        return OW::getRouter()->getBaseUrl().$uri;
+        return "href=\"".OW::getRouter()->getBaseUrl().$uri."\"";
     }
 
     public function applyPageModifications() {
@@ -259,7 +259,7 @@ class SPSEO_BOL_Service
         $newbody = $doc->getBody();
         // $time = microtime();
         $baseurl = preg_quote(OW::getRouter()->getBaseUrl(),'#');
-        $pattern = '#'.$baseurl.'(([a-z0-9\-\_]+\/)+(\d+))#i';
+        $pattern = '#href\="'.$baseurl.'(([a-z0-9\-\_]+\/)+(\d+))?"#i';
         $newbody = preg_replace_callback($pattern, array($this,'modifyLink'), $newbody);
         // die(microtime()-$time);
         
