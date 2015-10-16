@@ -28,7 +28,7 @@
 class SPSEO_BOL_Service
 {
     const PLUGIN_NAME = 'spseo';
-    const PLUGIN_VER = 'v1.1.1';
+    const PLUGIN_VER = 'v1.1.2';
     protected static $classInstance = null;
 
     private $bridges;
