@@ -70,6 +70,8 @@ class SPSEO_CLASS_EventHandler
 
     public function onBeforeRouting() {
         // if (OW::getRequest()->isAjax() || OW::getRequest()->isPost()) return;
+        $router = OW::getRouter();
+        if (strpos($router->getUri(), 'admin')===0) return;
 
         // init bridges
         if ($this->config->get('features.forum') && $this->checkPlugin('forum'))
